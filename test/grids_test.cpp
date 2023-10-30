@@ -40,7 +40,8 @@ TEST_CASE("Grids") {
     auto p = green::params::params("DESCR");
     green::grids::define_parameters(p);
     p.define<double>("BETA", "Inverse temperature", 100.0);
-    std::string input_file = GRID_PATH + "/ir/1e4.h5"s;
+    std::string grid_path  = GRID_PATH;
+    std::string input_file = grid_path + "/ir/1e4.h5"s;
     std::string args       = "test --grid_file " + input_file;
     auto [argc, argv]      = get_argc_argv(args);
     p.parse(argc, argv);
