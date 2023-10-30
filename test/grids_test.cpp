@@ -12,6 +12,8 @@
 
 #include "tensor_test.h"
 
+using namespace std::string_literals;
+
 inline std::pair<int, char**> get_argc_argv(std::string& str) {
   std::string        key;
   std::vector<char*> splits = {(char*)str.c_str()};
