@@ -1,4 +1,4 @@
-![symm](https://github.com/Green-Phys/green-grids/actions/workflows/test.yaml/badge.svg)
+![grids](https://github.com/Green-Phys/green-grids/actions/workflows/test.yaml/badge.svg)
 
 # Sparse grid utilities for IR and Chebyshev representations
 
