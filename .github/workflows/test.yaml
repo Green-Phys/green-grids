@@ -1,0 +1,33 @@
+name: build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    strategy:
+      fail-fast: false
+
+    runs-on: self-hosted
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build
+        run: |
+          module load BuildEnv/gcc-12.2.0.lua;
+          mkdir build && cd build && cmake ..;
+          make -j 8;
+
+      - name: Test
+        env:
+          HDF5_USE_FILE_LOCKING: 'FALSE'
+        run: |
+          module load BuildEnv/gcc-12.2.0.lua;
+          cd build;
+          ctest -j 1
+          # TODO: add project specific tests

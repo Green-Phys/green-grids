@@ -1,0 +1,13 @@
+[flake8]
+ignore =
+    E741,
+    #E741: ambiguous variable name
+    W504,
+    #W504: line break after binary operator
+exclude =
+    .git,
+    __pycache__,
+    venv,
+    .pytest_cache,
+max-complexity = 10
+max-line-length = 100
