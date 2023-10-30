@@ -29,9 +29,8 @@
     - `python/sparse_grid/chebyshev/`: Chebyshev-specific code.
     - `python/sparse_grid/repn.py`: Common module interface for representations.
     - `python/generate.py`: Script for generating HDF5 archives.
-- `cpp/`: C++ interface for loading and representing sparse grid data.
-    - `include/sparse_grid/`: Public headers.
-    - `third_party/`: third-party dependencies (via git submodule).
+- `c++/`: C++ interface for loading and representing sparse grid data.
+    - `green/grids/`: Public headers.
 - `data/`: Pre-generated data files.
 - `examples`: Usage examples.
 
@@ -43,6 +42,7 @@
 - C++:
     - Green/h5pp: for compatibility with h5py
     - Green/ndarrays: for compatibility with numpy.ndarray
+    - Green/params: for comandline parameters
 
 
 
