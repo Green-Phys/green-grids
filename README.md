@@ -5,7 +5,7 @@
 ## Essential contents for a temperature-independent sparse grid
 
 - `stats`: Bose or Fermi statistics.
-- `xgrid`: Real space grid points in $x \in [-1, 1]$.
+- `xgrid`: Real space grid points in $x \in (-1, 1)$.
 - `ngrid`: Frequency space grid points in Matsubara indices $n$, such that
   $\omega_n = (2n+\zeta)\pi/\beta$.
 - `wgrid`: Frequency space grid points assuming $\beta=1$.
