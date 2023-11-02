@@ -17,10 +17,10 @@ namespace green::grids {
   public:
     sparse_data(const params::params& p) : _beta(p["BETA"]) { read_representation(p); }
 
-    const RepnBase& repn(int stat) const { return stat ? *_repn_fermi.value().get() : *_repn_bose.value().get(); }
+    const RepnBase& repn(int stat) const { return stat ? *_repn_fermi.get() : *_repn_bose.get(); }
 
-    const RepnBase& repn_fermi() const { return *_repn_fermi.value().get(); }
-    const RepnBase& repn_bose() const { return *_repn_bose.value().get(); }
+    const RepnBase& repn_fermi() const { return *_repn_fermi.get(); }
+    const RepnBase& repn_bose() const { return *_repn_bose.get(); }
 
     double          beta() const { return _beta; }
 
@@ -51,11 +51,11 @@ namespace green::grids {
 
   private:
     // Representations
-    std::optional<std::unique_ptr<RepnBase>> _repn_fermi;
-    std::optional<std::unique_ptr<RepnBase>> _repn_bose;
+    std::unique_ptr<RepnBase> _repn_fermi;
+    std::unique_ptr<RepnBase> _repn_bose;
 
     // inverse temperature
-    double                                   _beta;
+    double                    _beta;
   };
 }  // namespace green::grids
 #endif  // GRIDS_SPARSE_DATA_H
