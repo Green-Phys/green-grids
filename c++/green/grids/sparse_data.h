@@ -17,6 +17,11 @@ namespace green::grids {
   public:
     sparse_data(const params::params& p) : _beta(p["BETA"]) { read_representation(p); }
 
+    sparse_data(const sparse_data& sd) = delete;
+
+    sparse_data(sparse_data&& sd) :
+        _repn_fermi(std::move(sd._repn_fermi)), _repn_bose(std::move(sd._repn_bose)), _beta(sd._beta) {}
+
     const RepnBase& repn(int stat) const { return stat ? *_repn_fermi.get() : *_repn_bose.get(); }
 
     const RepnBase& repn_fermi() const { return *_repn_fermi.get(); }

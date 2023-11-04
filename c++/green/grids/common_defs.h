@@ -7,6 +7,7 @@
 
 #include <green/ndarray/ndarray.h>
 #include <green/ndarray/ndarray_math.h>
+#include <green/params/params.h>
 
 #include <Eigen/Dense>
 
@@ -38,5 +39,10 @@ namespace green::grids {
   using CMMatrixXcd = Eigen::Map<const Eigen::Matrix<std::complex<double>, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>>;
   using CMMatrixXcf = Eigen::Map<const Eigen::Matrix<std::complex<float>, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>>;
   using CMMatrixXd  = Eigen::Map<const Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>>;
+
+  inline static void define_parameters(params::params& p) {
+    p.define<std::string>("TNL,grid_file", "Sparse imaginary time/frequency grid file name");
+    p.define<double>("BETA", "Inverse temperature");
+  }
 }  // namespace green::grids
 #endif  // GRIDS_COMMON_DEFS_H
