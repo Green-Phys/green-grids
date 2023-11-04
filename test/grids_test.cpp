@@ -76,10 +76,9 @@ TEST_CASE("Grids") {
   SECTION("Chebyshev") {
     auto p = green::params::params("DESCR");
     green::grids::define_parameters(p);
-    p.define<double>("BETA", "Inverse temperature", 10.0);
     std::string grid_path  = GRID_PATH;
     std::string input_file = grid_path + "/cheb/100.h5"s;
-    std::string args       = "test --grid_file " + input_file;
+    std::string args       = "test --BETA 10 --grid_file " + input_file;
     auto [argc, argv]      = get_argc_argv(args);
     p.parse(argc, argv);
 
@@ -91,10 +90,9 @@ TEST_CASE("Grids") {
   SECTION("IR") {
     auto p = green::params::params("DESCR");
     green::grids::define_parameters(p);
-    p.define<double>("BETA", "Inverse temperature", 10.0);
     std::string grid_path  = GRID_PATH;
     std::string input_file = grid_path + "/ir/1e4.h5"s;
-    std::string args       = "test --grid_file " + input_file;
+    std::string args       = "test --BETA 10 --grid_file " + input_file;
     auto [argc, argv]      = get_argc_argv(args);
     p.parse(argc, argv);
 
