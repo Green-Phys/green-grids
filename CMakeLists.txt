@@ -14,7 +14,7 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 include(GreenDeps)
 
 add_green_dependency(green-h5pp)
-add_green_dependency(green-ndarrays)
+add_green_dependency(green-ndarray)
 add_green_dependency(green-params)
 
 add_subdirectory(c++)
