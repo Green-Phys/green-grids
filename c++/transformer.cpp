@@ -45,7 +45,6 @@ namespace green::grids {
   }
 
   void transformer_t::read_trans(const std::string& path) {
-
     green::h5pp::archive tnl_file(grid_path(path));
     read_trans_statistics(tnl_file, 1, _Tnc, _Tcn, _Ttc, _Tct);
     read_trans_statistics(tnl_file, 0, _Tnc_B, _Tcn_B, _Ttc_B, _Tct_B);
