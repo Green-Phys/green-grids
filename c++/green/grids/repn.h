@@ -48,7 +48,7 @@ namespace green::grids {
 
   public:
     RepnBase(const params::params& p, int stat) : _stat(stat), _stat_name(stat ? "fermi" : "bose"), _beta(p["BETA"]) {
-      green::h5pp::archive ar(p["grid_file"]);
+      green::h5pp::archive ar(grid_path(p["grid_file"]));
       read_xsample(ar);
       read_wsample(ar);
       ar.close();

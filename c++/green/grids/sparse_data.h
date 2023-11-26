@@ -33,7 +33,7 @@ namespace green::grids {
     void read_representation(const params::params& p) {
       std::string   type_fermi;
       std::string   type_bose;
-      h5pp::archive ar(p["grid_file"], "r");
+      h5pp::archive ar(grid_path(p["grid_file"]), "r");
       ar["fermi/metadata/type"] >> type_fermi;
       ar["bose/metadata/type"] >> type_bose;
       ar.close();

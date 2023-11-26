@@ -100,4 +100,26 @@ TEST_CASE("Grids") {
 
     check_transformer(tr);
   }
+
+  SECTION("Wrong File") {
+    auto p = green::params::params("DESCR");
+    green::grids::define_parameters(p);
+    std::string input_file = "XXX"s;
+    std::string args       = "test --BETA 10 --grid_file " + input_file;
+    auto [argc, argv]      = get_argc_argv(args);
+    p.parse(argc, argv);
+    REQUIRE_THROWS_AS(green::grids::transformer_t(p), green::grids::grids_file_not_found_error);
+  }
+
+  SECTION("Read Internally Stored Grids") {
+    auto p = green::params::params("DESCR");
+    green::grids::define_parameters(p);
+    std::string input_file = "ir/1e4.h5"s;
+    std::string args       = "test --BETA 10 --grid_file " + input_file;
+    auto [argc, argv]      = get_argc_argv(args);
+    p.parse(argc, argv);
+    green::grids::transformer_t tr(p);
+
+    check_transformer(tr);
+  }
 }

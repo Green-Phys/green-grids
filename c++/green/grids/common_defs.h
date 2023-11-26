@@ -11,6 +11,8 @@
 
 #include <Eigen/Dense>
 
+using namespace std::string_literals;
+
 namespace green::grids {
   // NDArray types
   template <size_t D>
@@ -44,5 +46,7 @@ namespace green::grids {
     p.define<std::string>("TNL,grid_file", "Sparse imaginary time/frequency grid file name");
     p.define<double>("BETA", "Inverse temperature");
   }
+
+  std::string grid_path(const std::string& path);
 }  // namespace green::grids
 #endif  // GRIDS_COMMON_DEFS_H

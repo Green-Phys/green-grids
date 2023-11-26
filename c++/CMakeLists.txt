@@ -13,9 +13,11 @@ if (BLAS_FOUND)
     add_compile_definitions(EIGEN_USE_BLAS)
 endif ()
 
-add_library(grids transformer.cpp)
+add_library(grids transformer.cpp
+        common_defs.cpp)
 target_include_directories(grids PUBLIC .)
 target_link_libraries(grids PUBLIC GREEN::PARAMS GREEN::H5PP GREEN::NDARRAY Eigen3::Eigen)
+target_compile_definitions(grids PRIVATE GRID_SRC_PATH= "${grids_SOURCE_DIR}/data")
 if (BLAS_FOUND)
     target_link_libraries(grids PUBLIC BLAS::BLAS)
 endif (BLAS_FOUND)

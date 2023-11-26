@@ -12,6 +12,10 @@ namespace green::grids {
     grids_type_mismatch_error(const std::string& string) : runtime_error(string) {}
   };
 
+  class grids_file_not_found_error : public std::runtime_error {
+  public:
+    grids_file_not_found_error(const std::string& string) : runtime_error(string) {}
+  };
 }  // namespace green::grids
 
 #endif  // GRIDS_EXCEPT_H
