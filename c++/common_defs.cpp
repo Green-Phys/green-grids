@@ -9,9 +9,11 @@
 
 namespace green::grids {
   std::string grid_path(const std::string& path) {
-    if (!std::filesystem::exists(path) and !std::filesystem::exists(GRID_SRC_PATH + "/"s + path)) {
+    std::string src_path = GRID_SRC_PATH + "/"s + path;
+    std::string install_path = GRID_INSTALL_PATH + "/"s + path;
+    if (!std::filesystem::exists(path) and !std::filesystem::exists(src_path) and !std::filesystem::exists(install_path)) {
       throw grids_file_not_found_error("Grid file " + path + " does not exists");
     }
-    return std::filesystem::exists(path) ? path : GRID_SRC_PATH + "/"s + path;
+    return std::filesystem::exists(path) ? path : (std::filesystem::exists(src_path) ? src_path : install_path);
   }
 }  // namespace green::grids
