@@ -18,7 +18,7 @@ add_library(grids transformer.cpp
 target_include_directories(grids PUBLIC .)
 target_link_libraries(grids PUBLIC GREEN::PARAMS GREEN::H5PP GREEN::NDARRAY Eigen3::Eigen)
 target_compile_definitions(grids PUBLIC GRID_SRC_PATH="${grids_SOURCE_DIR}/data")
-target_compile_definitions(grids PUBLIC GRID_INSTALL_PATH="${CMAKE_INSTALL_PREFIX}/data")
+target_compile_definitions(grids PUBLIC GRID_INSTALL_PATH="${CMAKE_INSTALL_PREFIX}/share")
 if (BLAS_FOUND)
     target_link_libraries(grids PUBLIC BLAS::BLAS)
 endif (BLAS_FOUND)
