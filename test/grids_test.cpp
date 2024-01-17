@@ -61,6 +61,7 @@ void check_transformer(green::grids::transformer_t& tr) {
 
   std::array<size_t, 5>    shape = X1w.shape();
   green::grids::ztensor<2> X3w(shape[3], shape[4]);
+  green::grids::ztensor<3> X4w(shape[2], shape[3], shape[4]);
 
   for (int iw = 0; iw < shape[0]; ++iw) {
     for (int is = 0; is < shape[1]; ++is) {
@@ -68,6 +69,8 @@ void check_transformer(green::grids::transformer_t& tr) {
         tr.tau_to_omega_wsk(X1t, X3w, iw, is, ik);
         REQUIRE_THAT(X3w, IsCloseTo(X1w(iw, is, ik)));
       }
+      tr.tau_to_omega_ws(X1t, X4w, iw, is);
+      REQUIRE_THAT(X4w, IsCloseTo(X1w(iw, is)));
     }
   }
 }

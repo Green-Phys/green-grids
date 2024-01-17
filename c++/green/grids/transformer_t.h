@@ -53,7 +53,7 @@ namespace green::grids {
     sparse_data _sd;
 
   public:
-    transformer_t(const green::params::params& p) : _sd(p) { read_trans(p["grid_file"]); }
+                                transformer_t(const green::params::params& p) : _sd(p) { read_trans(p["grid_file"]); }
 
     /**
      * @param n   - [INPUT] Matsubara frequency number, omega(n) = iw_n
@@ -308,6 +308,24 @@ namespace green::grids {
 
       MMatrixXcd  f_w(F_w.data(), F_w.shape()[0], dim1);
       CMMatrixXcd f_t(F_t.data() + dim1, m, dim1);
+      f_w = Tnt * f_t;
+    }
+
+    template <size_t N>
+    typename std::enable_if<(N > 2), void>::type tau_to_omega_ws(const ztensor<N>& F_t, ztensor<N - 2>& F_w, size_t w, size_t s,
+                                                                 int eta = 1) const {
+      // Calculate coefficients in Chebyshev nodes
+      // Dimension of the rest of arrays
+      size_t dim1 = std::accumulate(F_t.shape().begin() + 1, F_t.shape().end(), 1ul, std::multiplies<size_t>());
+      size_t dim2 = std::accumulate(F_t.shape().begin() + 2, F_t.shape().end(), 1ul, std::multiplies<size_t>());
+
+      size_t n    = (eta == 1 ? _Tnt : _Tnt_B).rows();
+      size_t m    = (eta == 1 ? _Tnt : _Tnt_B).cols();
+      assert(w < n);
+      MatrixXcd                                            Tnt = (eta == 1 ? _Tnt : _Tnt_B).block(w, 0, 1, m);
+
+      MMatrixXcd                                           f_w(F_w.data(), 1, dim2);
+      Eigen::Map<const MatrixXcd, 0, Eigen::OuterStride<>> f_t(F_t.data() + dim1 + s * dim2, m, dim2, Eigen::OuterStride<>(dim1));
       f_w = Tnt * f_t;
     }
 
