@@ -145,7 +145,8 @@ TEST_CASE("Grids") {
     p.parse(argc, argv);
 
     green::grids::transformer_t tr(p);
-
+    REQUIRE(tr.sd().repn(0).repn() == "chebyshev");
+    REQUIRE(tr.sd().repn(1).repn() == "chebyshev");
     check_transformer(tr);
   }
 
@@ -159,7 +160,8 @@ TEST_CASE("Grids") {
     p.parse(argc, argv);
 
     green::grids::transformer_t tr(p);
-
+    REQUIRE(tr.sd().repn(0).repn() == "ir");
+    REQUIRE(tr.sd().repn(1).repn() == "ir");
     check_transformer(tr);
   }
 

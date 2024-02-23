@@ -30,6 +30,7 @@ jobs:
         run: |
           module load BuildEnv/gcc-12.2.0.lua;
           cd build;
+          export OMP_NUM_THREADS=1;
           ctest -j 1
           # TODO: add project specific tests
 
