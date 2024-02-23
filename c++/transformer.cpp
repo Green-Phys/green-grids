@@ -71,7 +71,7 @@ namespace green::grids {
     _Ttn_FB = _Ttc_B_other * _Tcn_B;
   }
 
-  void transformer_t::fermi_boson_trans(const ztensor<4>& F_t_before, ztensor<4>& F_t_after, int eta) {
+  void transformer_t::fermi_boson_trans(const ztensor<4>& F_t_before, ztensor<4>& F_t_after, int eta) const {
     size_t dim_t = F_t_before.shape()[1] * F_t_before.shape()[2] * F_t_before.shape()[3];
     size_t dim_c = F_t_after.shape()[1] * F_t_after.shape()[2] * F_t_after.shape()[3];
     assert(dim_t == dim_c);

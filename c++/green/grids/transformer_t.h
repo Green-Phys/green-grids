@@ -79,7 +79,7 @@ namespace green::grids {
      * Transformation between Fermionic and Bosonic grids.
      * @param eta - [INPUT] starting statistics
      */
-    void fermi_boson_trans(const ztensor<4>& F_t_before, ztensor<4>& F_t_after, int eta);
+    void fermi_boson_trans(const ztensor<4>& F_t_before, ztensor<4>& F_t_after, int eta) const;
 
     /**
      * Transform the tensor represented in fermionic imaginary time into bosonic Matsubara frequency through the intermediate
@@ -227,7 +227,7 @@ namespace green::grids {
     void tau_to_chebyshev(const ztensor<N>& F_t, ztensor<N>& F_c, int eta = 1) const {
       // Calculate coefficients in Chebyshev nodes
       // Dimension of the rest of arrays
-      size_t     dim1 = std::accumulate(F_t.shape().begin() + 1, F_t.shape().end(), 1ul, std::multiplies<size_t>());
+      size_t     dim1 = std::accumulate(F_t.shape().begin() + 1, F_t.shape().end(), 1ul, std::multiplies<>());
       // size_t dim1 = F_t.shape()[1]*F_t.shape()[2]*F_t.shape()[3]*F_t.shape()[4];
       //  Chebyshev tensor as rectangular matrix
       MMatrixXcd f_c(F_c.data(), F_c.shape()[0], dim1);
@@ -248,7 +248,7 @@ namespace green::grids {
       assert(ic2 < ni);
       // Calculate coefficients in Chebyshev nodes
       // Dimension of the rest of arrays
-      size_t      dim1 = std::accumulate(F_t.shape().begin() + 1, F_t.shape().end(), 1ul, std::multiplies<size_t>());
+      size_t      dim1 = std::accumulate(F_t.shape().begin() + 1, F_t.shape().end(), 1ul, std::multiplies<>());
       // size_t dim1 = F_t.shape()[1]*F_t.shape()[2]*F_t.shape()[3]*F_t.shape()[4];
       //  Chebyshev tensor as rectangular matrix
       MMatrixXcd  f_c(F_c.data(), F_c.shape()[0], dim1);
@@ -266,7 +266,7 @@ namespace green::grids {
       assert(ic < ni);
       // Calculate coefficients in Chebyshev nodes
       // Dimension of the rest of arrays
-      size_t      dim1 = std::accumulate(F_t.shape().begin() + 1, F_t.shape().end(), 1ul, std::multiplies<size_t>());
+      size_t      dim1 = std::accumulate(F_t.shape().begin() + 1, F_t.shape().end(), 1ul, std::multiplies<>());
       // size_t dim1 = F_t.shape()[1]*F_t.shape()[2]*F_t.shape()[3]*F_t.shape()[4];
       //  Chebyshev tensor as rectangular matrix
       MMatrixXcd  f_c(F_c.data(), F_c.shape()[0], dim1);
@@ -282,7 +282,7 @@ namespace green::grids {
     void tau_to_omega(const ztensor<N>& F_t, ztensor<N>& F_w, int eta = 1) const {
       // Calculate coefficients in Chebyshev nodes
       // Dimension of the rest of arrays
-      size_t     dim1 = std::accumulate(F_t.shape().begin() + 1, F_t.shape().end(), 1ul, std::multiplies<size_t>());
+      size_t     dim1 = std::accumulate(F_t.shape().begin() + 1, F_t.shape().end(), 1ul, std::multiplies<>());
       // size_t dim1 = F_t.shape()[1]*F_t.shape()[2]*F_t.shape()[3]*F_t.shape()[4];
       //  Chebyshev tensor as rectangular matrix
       MMatrixXcd f_w(F_w.data(), F_w.shape()[0], dim1);
@@ -299,7 +299,7 @@ namespace green::grids {
     void tau_to_omega_w(const ztensor<N>& F_t, ztensor<N>& F_w, size_t w, int eta = 1) const {
       // Calculate coefficients in Chebyshev nodes
       // Dimension of the rest of arrays
-      size_t dim1 = std::accumulate(F_t.shape().begin() + 1, F_t.shape().end(), 1ul, std::multiplies<size_t>());
+      size_t dim1 = std::accumulate(F_t.shape().begin() + 1, F_t.shape().end(), 1ul, std::multiplies<>());
 
       size_t n    = (eta == 1 ? _Tnt : _Tnt_B).rows();
       size_t m    = (eta == 1 ? _Tnt : _Tnt_B).cols();
@@ -316,8 +316,8 @@ namespace green::grids {
                                                                  int eta = 1) const {
       // Calculate coefficients in Chebyshev nodes
       // Dimension of the rest of arrays
-      size_t dim1 = std::accumulate(F_t.shape().begin() + 1, F_t.shape().end(), 1ul, std::multiplies<size_t>());
-      size_t dim2 = std::accumulate(F_t.shape().begin() + 2, F_t.shape().end(), 1ul, std::multiplies<size_t>());
+      size_t dim1 = std::accumulate(F_t.shape().begin() + 1, F_t.shape().end(), 1ul, std::multiplies<>());
+      size_t dim2 = std::accumulate(F_t.shape().begin() + 2, F_t.shape().end(), 1ul, std::multiplies<>());
 
       size_t n    = (eta == 1 ? _Tnt : _Tnt_B).rows();
       size_t m    = (eta == 1 ? _Tnt : _Tnt_B).cols();
@@ -334,9 +334,9 @@ namespace green::grids {
                                                                   size_t k, int eta = 1) const {
       // Calculate coefficients in Chebyshev nodes
       // Dimension of the rest of arrays
-      size_t dim1 = std::accumulate(F_t.shape().begin() + 1, F_t.shape().end(), 1ul, std::multiplies<size_t>());
-      size_t dim2 = std::accumulate(F_t.shape().begin() + 2, F_t.shape().end(), 1ul, std::multiplies<size_t>());
-      size_t dim3 = std::accumulate(F_t.shape().begin() + 3, F_t.shape().end(), 1ul, std::multiplies<size_t>());
+      size_t dim1 = std::accumulate(F_t.shape().begin() + 1, F_t.shape().end(), 1ul, std::multiplies<>());
+      size_t dim2 = std::accumulate(F_t.shape().begin() + 2, F_t.shape().end(), 1ul, std::multiplies<>());
+      size_t dim3 = std::accumulate(F_t.shape().begin() + 3, F_t.shape().end(), 1ul, std::multiplies<>());
 
       size_t n    = (eta == 1 ? _Tnt : _Tnt_B).rows();
       size_t m    = (eta == 1 ? _Tnt : _Tnt_B).cols();
@@ -353,7 +353,7 @@ namespace green::grids {
     void omega_to_tau(const ztensor<N>& F_w, ztensor<N>& F_t, int eta = 1) const {
       // Calculate coefficients in Chebyshev nodes
       // Dimension of the rest of arrays
-      size_t     dim1 = std::accumulate(F_w.shape().begin() + 1, F_w.shape().end(), 1ul, std::multiplies<size_t>());
+      size_t     dim1 = std::accumulate(F_w.shape().begin() + 1, F_w.shape().end(), 1ul, std::multiplies<>());
       // size_t dim1 = F_t.shape()[1]*F_t.shape()[2]*F_t.shape()[3]*F_t.shape()[4];
       //  Chebyshev tensor as rectangular matrix
       MMatrixXcd f_t(F_t.data(), F_t.shape()[0], dim1);
@@ -419,31 +419,31 @@ namespace green::grids {
      * Getters
      */
   public:
-    const MatrixXcd&   Ttn_FB() const { return _Ttn_FB; }
+    [[nodiscard]] const MatrixXcd&   Ttn_FB() const { return _Ttn_FB; }
 
-    const MatrixXcd&   Tnt_BF() const { return _Tnt_BF; }
+    [[nodiscard]] const MatrixXcd&   Tnt_BF() const { return _Tnt_BF; }
 
-    const MatrixXcd&   Tnc() const { return _Tnc; }
+    [[nodiscard]] const MatrixXcd&   Tnc() const { return _Tnc; }
 
-    const MatrixXcd&   Tcn() const { return _Tcn; }
+    [[nodiscard]] const MatrixXcd&   Tcn() const { return _Tcn; }
 
-    const MatrixXcd&   Tnc_B() const { return _Tnc_B; }
+    [[nodiscard]] const MatrixXcd&   Tnc_B() const { return _Tnc_B; }
 
-    const MatrixXd&    Ttc() const { return _Ttc; }
+    [[nodiscard]] const MatrixXd&    Ttc() const { return _Ttc; }
 
-    const MatrixXd&    Ttc_B() const { return _Ttc_B; }
+    [[nodiscard]] const MatrixXd&    Ttc_B() const { return _Ttc_B; }
 
-    const MatrixXd&    Tct() const { return _Tct; }
+    [[nodiscard]] const MatrixXd&    Tct() const { return _Tct; }
 
-    const MatrixXcd&   Tnt() const { return _Tnt; }
+    [[nodiscard]] const MatrixXcd&   Tnt() const { return _Tnt; }
 
-    const MatrixXcd&   Ttn() const { return _Ttn; }
+    [[nodiscard]] const MatrixXcd&   Ttn() const { return _Ttn; }
 
-    const MatrixXcd&   Tnt_B() const { return _Tnt_B; }
+    [[nodiscard]] const MatrixXcd&   Tnt_B() const { return _Tnt_B; }
 
-    const MatrixXcd&   Ttn_B() const { return _Ttn_B; }
+    [[nodiscard]] const MatrixXcd&   Ttn_B() const { return _Ttn_B; }
 
-    const sparse_data& sd() const { return _sd; }
+    [[nodiscard]] const sparse_data& sd() const { return _sd; }
   };
 }  // namespace green::grids
 

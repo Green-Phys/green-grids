@@ -73,6 +73,65 @@ void check_transformer(green::grids::transformer_t& tr) {
       REQUIRE_THAT(X4w, IsCloseTo(X1w(iw, is)));
     }
   }
+
+  SECTION("FERMI-BOSON") {
+    std::transform(epsk.begin(), epsk.end(), epsk.begin(), [&i, nk](double x) { return std::cos((2.0 * M_PI * i++) / nk); });
+    green::grids::ztensor<4> X5w_f;
+    {
+      green::grids::ztensor<2> tmp(tr.sd().repn_fermi().nw(), nk);
+      for (size_t iw = 0; iw < tmp.shape()[0]; ++iw) {
+        tmp(iw) += (1. / (tr.sd().repn_fermi().wsample()(iw) * 1.i - epsk));
+      }
+      X5w_f = tmp.reshape(tr.sd().repn_fermi().nw(), nk, 1, 1);
+    }
+    green::grids::ztensor<4> X5t_f(tr.sd().repn_fermi().nts(), nk, 1, 1);
+    tr.omega_to_tau(X5w_f, X5t_f);
+    green::grids::ztensor<4> X5t_b(tr.sd().repn_bose().nts(), nk, 1, 1);
+    green::grids::ztensor<4> X6t_f(X5t_f.shape());
+    tr.fermi_boson_trans(X5t_f, X5t_b, 1);
+    tr.fermi_boson_trans(X5t_b, X6t_f, 0);
+    REQUIRE_THAT(X5t_f, IsCloseTo(X6t_f));
+  }
+  SECTION("Fixed Frequency Transform") {
+    green::grids::ztensor<5> X1w_partial(2, ns, nk, 1, 1);
+    tr.tau_f_to_w_b(X1t, X1w_b);
+    tr.tau_f_to_w_b(X1t, X1w_partial, 2, 2);
+    REQUIRE_THAT(X1w_b(2), IsCloseTo(X1w_partial(0)));
+    REQUIRE_THAT(X1w_b(3), IsCloseTo(X1w_partial(1)));
+  }
+  SECTION("To And From Basis") {
+    green::grids::ztensor<5> X1c(tr.sd().repn_fermi().ni(), ns, nk, 1, 1);
+    green::grids::ztensor<5> X1w_2(X1w.shape());
+    green::grids::ztensor<5> X1t_2(X1t.shape());
+    tr.matsubara_to_chebyshev(X1w, X1c, 1);
+    tr.chebyshev_to_matsubara(X1c, X1w_2, 1);
+    REQUIRE_THAT(X1w, IsCloseTo(X1w_2));
+    tr.tau_to_chebyshev(X1t, X1c, 1);
+    tr.chebyshev_to_tau(X1c, X1t_2, 1);
+    REQUIRE_THAT(X1t, IsCloseTo(X1t_2));
+  }
+  SECTION("Bose") {
+    green::grids::ztensor<4> W1w_b;
+    {
+      green::grids::ztensor<2> tmp(tr.sd().repn_bose().nw(), nk);
+      for (size_t iw = 0; iw < tmp.shape()[0]; ++iw) {
+        tmp(iw) += (1. / (tr.sd().repn_bose().wsample()(iw) * 1.i - epsk));
+      }
+      W1w_b = tmp.reshape(tr.sd().repn_bose().nw(), nk, 1, 1);
+    }
+    green::grids::ztensor<4> W1t_b(tr.sd().repn_bose().nts(), nk, 1, 1);
+    tr.omega_to_tau(W1w_b, W1t_b, 0);
+    green::grids::ztensor<4> W2w_b(tr.sd().repn_bose().nw(), nk, 1, 1);
+    green::grids::ztensor<4> W3w_b(1, nk, 1, 1);
+    tr.tau_to_omega(W1t_b, W2w_b, 0);
+    tr.tau_to_omega_w(W1t_b, W3w_b, 5, 0);
+    REQUIRE_THAT(W1w_b, IsCloseTo(W2w_b));
+    REQUIRE_THAT(W1w_b(5), IsCloseTo(W3w_b(0)));
+  }
+  SECTION("Check Leakage") {
+    double leakage = tr.check_chebyshev(X1t, 1);
+    REQUIRE(leakage < 1e-10);
+  }
 }
 
 TEST_CASE("Grids") {
@@ -104,7 +163,7 @@ TEST_CASE("Grids") {
     check_transformer(tr);
   }
 
-  SECTION("Wrong File") {
+  SECTION("File Does Not Exist") {
     auto p = green::params::params("DESCR");
     green::grids::define_parameters(p);
     std::string input_file = "XXX"s;
@@ -112,6 +171,16 @@ TEST_CASE("Grids") {
     auto [argc, argv]      = get_argc_argv(args);
     p.parse(argc, argv);
     REQUIRE_THROWS_AS(green::grids::transformer_t(p), green::grids::grids_file_not_found_error);
+  }
+
+  SECTION("Wrong File") {
+    auto p = green::params::params("DESCR");
+    green::grids::define_parameters(p);
+    std::string input_file = TEST_PATH + "/wrong_grid.h5"s;
+    std::string args       = "test --BETA 10 --grid_file " + input_file;
+    auto [argc, argv]      = get_argc_argv(args);
+    p.parse(argc, argv);
+    REQUIRE_THROWS_AS(green::grids::transformer_t(p), green::grids::grids_type_mismatch_error);
   }
 
   SECTION("Read Internally Stored Grids") {
