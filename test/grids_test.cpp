@@ -103,12 +103,16 @@ void check_transformer(green::grids::transformer_t& tr) {
     green::grids::ztensor<5> X1c(tr.sd().repn_fermi().ni(), ns, nk, 1, 1);
     green::grids::ztensor<5> X1w_2(X1w.shape());
     green::grids::ztensor<5> X1t_2(X1t.shape());
+    green::grids::ztensor<5> X1t_3(1, ns, nk, 1, 1);
     tr.matsubara_to_chebyshev(X1w, X1c, 1);
     tr.chebyshev_to_matsubara(X1c, X1w_2, 1);
     REQUIRE_THAT(X1w, IsCloseTo(X1w_2));
     tr.tau_to_chebyshev(X1t, X1c, 1);
     tr.chebyshev_to_tau(X1c, X1t_2, 1);
+    tr.chebyshev_to_tau(X1c, X1t_3, 1, true);
+
     REQUIRE_THAT(X1t, IsCloseTo(X1t_2));
+    REQUIRE_THAT(X1t(tr.sd().repn_fermi().nts()-1), IsCloseTo(X1t_3(0)));
   }
   SECTION("Bose") {
     green::grids::ztensor<4> W1w_b;
@@ -120,6 +124,9 @@ void check_transformer(green::grids::transformer_t& tr) {
       W1w_b = tmp.reshape(tr.sd().repn_bose().nw(), nk, 1, 1);
     }
     green::grids::ztensor<4> W1t_b(tr.sd().repn_bose().nts(), nk, 1, 1);
+    green::grids::ztensor<4> W2t_b(tr.sd().repn_bose().nts(), nk, 1, 1);
+    green::grids::ztensor<4> W3t_b(1, nk, 1, 1);
+    green::grids::ztensor<4> W1c_b(tr.sd().repn_bose().ni(), nk, 1, 1);
     tr.omega_to_tau(W1w_b, W1t_b, 0);
     green::grids::ztensor<4> W2w_b(tr.sd().repn_bose().nw(), nk, 1, 1);
     green::grids::ztensor<4> W3w_b(1, nk, 1, 1);
@@ -127,6 +134,13 @@ void check_transformer(green::grids::transformer_t& tr) {
     tr.tau_to_omega_w(W1t_b, W3w_b, 5, 0);
     REQUIRE_THAT(W1w_b, IsCloseTo(W2w_b));
     REQUIRE_THAT(W1w_b(5), IsCloseTo(W3w_b(0)));
+
+    tr.tau_to_chebyshev(W1t_b, W1c_b, 0);
+    tr.chebyshev_to_tau(W1c_b, W2t_b, 0);
+    tr.chebyshev_to_tau(W1c_b, W3t_b, 0, true);
+
+    REQUIRE_THAT(W1t_b, IsCloseTo(W2t_b));
+    REQUIRE_THAT(W1t_b(tr.sd().repn_bose().nts()-1), IsCloseTo(W3t_b(0)));
   }
   SECTION("Check Leakage") {
     double leakage = tr.check_chebyshev(X1t, 1);
