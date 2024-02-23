@@ -112,7 +112,7 @@ void check_transformer(green::grids::transformer_t& tr) {
     tr.chebyshev_to_tau(X1c, X1t_3, 1, true);
 
     REQUIRE_THAT(X1t, IsCloseTo(X1t_2));
-    REQUIRE_THAT(X1t(tr.sd().repn_fermi().nts()-1), IsCloseTo(X1t_3(0)));
+    REQUIRE_THAT(X1t(tr.sd().repn_fermi().nts() - 1), IsCloseTo(X1t_3(0)));
   }
   SECTION("Bose") {
     green::grids::ztensor<4> W1w_b;
@@ -140,7 +140,7 @@ void check_transformer(green::grids::transformer_t& tr) {
     tr.chebyshev_to_tau(W1c_b, W3t_b, 0, true);
 
     REQUIRE_THAT(W1t_b, IsCloseTo(W2t_b));
-    REQUIRE_THAT(W1t_b(tr.sd().repn_bose().nts()-1), IsCloseTo(W3t_b(0)));
+    REQUIRE_THAT(W1t_b(tr.sd().repn_bose().nts() - 1), IsCloseTo(W3t_b(0)));
   }
   SECTION("Check Leakage") {
     double leakage = tr.check_chebyshev(X1t, 1);

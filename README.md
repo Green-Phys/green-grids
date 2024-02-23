@@ -2,6 +2,7 @@
 [![GitHub license](https://img.shields.io/badge/C%2B%2B-17-blue)](https://en.cppreference.com/w/cpp/compiler_support/17)
 
 ![grids](https://github.com/Green-Phys/green-grids/actions/workflows/test.yaml/badge.svg)
+[![codecov](https://codecov.io/gh/Green-Phys/green-grids/graph/badge.svg?token=Q4L185DC33)](https://codecov.io/gh/Green-Phys/green-grids)
 
 # Sparse grid utilities for IR and Chebyshev representations
 
