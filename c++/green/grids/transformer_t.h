@@ -105,6 +105,7 @@ namespace green::grids {
       size_t dim_t = std::accumulate(F_t.shape().begin() + 1, F_t.shape().end(), 1ul, std::multiplies<size_t>());
       size_t dim_w = std::accumulate(F_w.shape().begin() + 1, F_w.shape().end(), 1ul, std::multiplies<size_t>());
       assert(dim_t == dim_w);
+      if (n_w == 0) return;
       size_t      m   = _Tnt_BF.cols();
       MatrixXcd   Tnt = _Tnt_BF.block(w, 0, n_w, m);
 
@@ -135,7 +136,7 @@ namespace green::grids {
     void w_b_to_tau_f(const ztensor<N>& F_w, ztensor<N>& F_t, size_t t, size_t n_t, bool shift = false) const {
       size_t dim_t = std::accumulate(F_t.shape().begin() + 1, F_t.shape().end(), 1ul, std::multiplies<size_t>());
       size_t dim_w = std::accumulate(F_w.shape().begin() + 1, F_w.shape().end(), 1ul, std::multiplies<size_t>());
-      if(n_t == 0) return;
+      if (n_t == 0) return;
       assert(dim_t == dim_w);
 
       size_t      m   = _Ttn_FB.cols();
