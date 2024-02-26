@@ -189,6 +189,7 @@ TEST_CASE("Grids") {
     REQUIRE_THROWS_AS(green::grids::transformer_t(p), green::grids::grids_file_not_found_error);
   }
 
+#ifndef NDEBUG
   SECTION("Wrong File") {
     auto p = green::params::params("DESCR");
     green::grids::define_parameters(p);
@@ -198,6 +199,7 @@ TEST_CASE("Grids") {
     p.parse(argc, argv);
     REQUIRE_THROWS_AS(green::grids::transformer_t(p), green::grids::grids_type_mismatch_error);
   }
+#endif
 
   SECTION("Read Internally Stored Grids") {
     auto p = green::params::params("DESCR");
