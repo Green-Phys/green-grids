@@ -132,15 +132,16 @@ namespace green::grids {
     }
 
     template <size_t N>
-    void w_b_to_tau_f(const ztensor<N>& F_w, ztensor<N>& F_t, size_t w, size_t n_w) const {
+    void w_b_to_tau_f(const ztensor<N>& F_w, ztensor<N>& F_t, size_t t, size_t n_t, bool shift = false) const {
       size_t dim_t = std::accumulate(F_t.shape().begin() + 1, F_t.shape().end(), 1ul, std::multiplies<size_t>());
       size_t dim_w = std::accumulate(F_w.shape().begin() + 1, F_w.shape().end(), 1ul, std::multiplies<size_t>());
+      if(n_t == 0) return;
       assert(dim_t == dim_w);
 
-      size_t      m   = _Ttn_FB.rows();
-      MatrixXcd   Ttn = _Ttn_FB.block(0, w, m, n_w);
+      size_t      m   = _Ttn_FB.cols();
+      MatrixXcd   Ttn = _Ttn_FB.block(t, 0, n_t, m);
 
-      MMatrixXcd  f_t(F_t.data(), F_t.shape()[0], dim_t);
+      MMatrixXcd  f_t(F_t.data() + (shift ? t * dim_t : 0), n_t, dim_t);
       CMMatrixXcd f_w(F_w.data(), F_w.shape()[0], dim_w);
       f_t = Ttn * f_w;
     }

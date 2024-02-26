@@ -99,6 +99,19 @@ void check_transformer(green::grids::transformer_t& tr) {
     REQUIRE_THAT(X1w_b(2), IsCloseTo(X1w_partial(0)));
     REQUIRE_THAT(X1w_b(3), IsCloseTo(X1w_partial(1)));
   }
+  SECTION("Fixed Time Transform") {
+    green::grids::ztensor<5> X1t_2(tr.sd().repn_fermi().nts(), ns, nk, 1, 1);
+    green::grids::ztensor<5> X1t_partial(2, ns, nk, 1, 1);
+    green::grids::ztensor<5> X1t_full(tr.sd().repn_fermi().nts(), ns, nk, 1, 1);
+    tr.w_b_to_tau_f(X1w_b, X1t_2);
+    tr.w_b_to_tau_f(X1w_b, X1t_partial, 2, 2);
+    tr.w_b_to_tau_f(X1w_b, X1t_full, 2, 2, true);
+    REQUIRE_THAT(X1t_2(2), IsCloseTo(X1t_partial(0)));
+    REQUIRE_THAT(X1t_2(3), IsCloseTo(X1t_partial(1)));
+    REQUIRE_THAT(X1t_2(2), IsCloseTo(X1t_full(2)));
+    REQUIRE_THAT(X1t_2(3), IsCloseTo(X1t_full(3)));
+    REQUIRE_THAT(X1t_2(0), !IsCloseTo(X1t_full(0)));
+  }
   SECTION("To And From Basis") {
     green::grids::ztensor<5> X1c(tr.sd().repn_fermi().ni(), ns, nk, 1, 1);
     green::grids::ztensor<5> X1w_2(X1w.shape());
