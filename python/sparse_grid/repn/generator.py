@@ -40,7 +40,6 @@ class Generator:
 
         uwl = self.basis.compute_unl(ngrid, self.lgrid)
         ulw = self.basis.compute_uln(uwl)
-
         return SparseData(self.stats,
                           xgrid,
                           ngrid,

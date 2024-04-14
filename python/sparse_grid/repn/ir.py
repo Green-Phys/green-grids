@@ -2,49 +2,41 @@ import numpy as np
 import scipy.linalg as la
 from sparse_grid.repn.basis import SparseBasis
 from sparse_grid.repn.transformer import SparseTransformer
-from sparse_ir import adapter
+import sparse_ir
 
 _stats_str = {'fermi': 'F', 'bose': 'B'}
-
-
-def _start_guesses(lambda_, n=1000):
-    "Construct points on a logarithmically extended linear interval"
-    x1 = np.arange(n)
-    x2 = np.array(np.exp(np.linspace(np.log(n), np.log(lambda_ * 100), n)), dtype=int)
-    x = np.unique(np.hstack((x1, x2)))
-    return x
 
 
 class Basis(SparseBasis):
 
     def __init__(self, lambda_, ncoeff, stats, trim=True, h5file=""):
-        self._basis = adapter.load(_stats_str[stats], int(float(lambda_)))
-        adapter._start_guesses = lambda n=1000: _start_guesses(self._basis.Lambda, n)
+        sparse_ir.poly.PiecewiseLegendreFT._DEFAULT_GRID =  np.hstack([np.arange(2**6), (2**np.linspace(6, 30, 16*(30-6)+1)).astype(np.int64)])
+        self._basis = sparse_ir.FiniteTempBasis(_stats_str[stats], beta=1.0, wmax=int(float(lambda_)))
+        self.Lambda = lambda_
         if ncoeff is None:
-            ncoeff = self._basis.dim()
-
+            ncoeff = self._basis.size
         super().__init__(ncoeff, stats, trim)
 
     def ulx(self, uxl):
         return la.pinv(uxl)
 
     def _sampling_points_matsubara(self, ncoeff: int):
-        return self._basis.sampling_points_matsubara(ncoeff - 1)
+        print (sparse_ir.basis._default_matsubara_sampling_points(self._basis._uhat_full, ncoeff) - (1 if self.stats == 'fermi' else 0))//2
 
     def _sampling_points_x(self, ncoeff: int):
-        return self._basis.sampling_points_x(ncoeff - 1)
+        return sparse_ir.basis._default_sampling_points(self._basis.sve_result.u, ncoeff)
 
     def _uxl(self, l, x):
-        return self._basis.ulx(l[None, :], x[:, None])
+        return self._basis.u[:self._dim]((np.asarray(x) + 1)/2).T * np.sqrt(1.0/2.0)
 
     def compute_unl(self, n, whichl=None):
-        return self._basis.compute_unl(n, whichl)
+        return self._basis.uhat[:self._dim]((2 * n +  (1 if self.stats == 'fermi' else 0))).T
 
     def metadata(self, ncoeff):
         return {
             'type': 'ir',
             'ncoeff': ncoeff,
-            'lambda': self._basis.Lambda,
+            'lambda': self.Lambda,
         }
 
 
