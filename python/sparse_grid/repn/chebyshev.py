@@ -101,7 +101,7 @@ def eval_Imz(poly, stat, n, prec):
 def _sign_changes(fn):
     "Given a discretized 1D function, return the location of the extrema"
     fn = np.asarray(fn)
-    sign_flip = fn[1:] * fn[:-1] < 0
+    sign_flip = ((fn[1:] < 0) & (fn[:-1] > 0)) | ((fn[1:] > 0) & (fn[:-1] < 0))
     return sign_flip.nonzero()[0]
 
 
