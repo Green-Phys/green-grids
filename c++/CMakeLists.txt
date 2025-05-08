@@ -1,6 +1,6 @@
 project(grids-lib CXX)
 
-find_package(Eigen3 3.3 NO_MODULE REQUIRED)
+find_package(Eigen3 3.4 REQUIRED)
 find_package(BLAS)
 if (BLAS_FOUND)
     if (BLAS_LIBRARIES MATCHES ".*Accelerate")
