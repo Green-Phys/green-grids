@@ -1,5 +1,7 @@
 project(grids-lib CXX)
 
+cmake_policy(SET CMP0144 NEW)
+
 find_package(Eigen3 REQUIRED)
 find_package(BLAS)
 if (BLAS_FOUND)
