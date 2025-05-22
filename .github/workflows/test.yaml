@@ -12,42 +12,34 @@ jobs:
     strategy:
       fail-fast: false
 
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+    - uses: actions/checkout@v4
 
-      - name: Build
-        run: |
-          module load BuildEnv/gcc-12.2.0.lua;
-          mkdir build && cd build;
-          cmake -DCMAKE_CXX_FLAGS=" --coverage -fno-inline -fno-inline-small-functions -fno-default-inline -fprofile-arcs -ftest-coverage " ..;
-          make -j 8;
+    - name: Build
+      run: |        
+        sudo apt-get update
+        sudo apt-get install openmpi-bin openmpi-common libopenmpi-dev
+        sudo apt-get install libhdf5-serial-dev
+        sudo apt-get install libeigen3-dev
+        sudo apt-get install libopenblas-dev 
+        sudo apt-get install lcov
 
-      - name: Test
-        env:
-          HDF5_USE_FILE_LOCKING: 'FALSE'
-        run: |
-          module load BuildEnv/gcc-12.2.0.lua;
-          cd build;
-          export OMP_NUM_THREADS=1;
-          ctest -j 1
-          # TODO: add project specific tests
+        mkdir build;
+        cd build;
+        cmake -DCMAKE_CXX_FLAGS=" --coverage -fno-inline -fno-inline-small-functions -fno-default-inline -fprofile-arcs -ftest-coverage " .. ;
+        make -j4;
 
-      - name: Run coverage
-        run: |
-          module load BuildEnv/gcc-12.2.0.lua;
-          cd build;
-          lcov --capture --directory . --output-file coverage.info;
-          lcov --remove coverage.info '/usr/*' --output-file coverage.info
-          lcov --remove coverage.info '/opt/ohpc/pub/compiler/*' --output-file coverage.info
-          lcov --remove coverage.info '*_deps*' --output-file coverage.info
-          lcov --remove coverage.info '*libs*' --output-file coverage.info
-          lcov --list coverage.info
-
-      - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v3
-        with:
-          flags: unittests
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+    - name: Test
+      run: |
+        cd build;
+        ctest -j1;
+    - name: Run coverage
+      run: |
+        cd build;
+        lcov --ignore-errors source,source --capture --directory . --output-file coverage.info;
+    - name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v3
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
