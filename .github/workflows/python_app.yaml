@@ -26,11 +26,11 @@ jobs:
         python-version: "3.10"
     - name: Install dependencies
       run: |
+        sudo apt-get update
+        sudo apt-get install lcov libhdf5-dev
         python -m pip install --upgrade pip
         pip install flake8 pytest coverage
         pip install -r python/requirements.txt
-        sudo apt-get update
-        sudo apt-get install lcov
     - name: Lint with flake8
       run: |
         cd python
