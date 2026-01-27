@@ -41,7 +41,7 @@
 ## Dependencies
 
 - Python:
-    - [`sparse-ir`](https://github.com/spare-ir)
+    - [`sparse-ir`](https://github.com/SpM-lab/sparse-ir)
     - `numpy`, `scipy`, `h5py`, and `mpmath`.
 - C++:
     - Green/h5pp: for compatibility with h5py
@@ -60,7 +60,7 @@ make install
 make test  # Test the code
 ```
 
-The Python pacakge for `green-grids` can be installed using PyPI:
+The Python package for `green-grids` can be installed using PyPI:
 ```bash
 pip install green-grids
 ```

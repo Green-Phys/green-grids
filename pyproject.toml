@@ -40,11 +40,12 @@ classifiers = [
   "Operating System :: MacOS",
 ]
 dependencies = [
-  "numpy>=1.23",
-  "scipy>=1.5",
-  "h5py",
-  "mpmath",
-  "sparse-ir<=1.1.7",
+  "numpy>=1.19.0",
+  "scipy>=1.5.0",
+  "h5py>=3.0.0",
+  "mpmath>=1.0.0",
+  "sparse-ir>1.0.0,<=1.1.7",
+  "xprec>=1.3.0"
 ]
 
 [project.urls]
@@ -58,8 +59,8 @@ Documentation = "https://github.com/green-phys/green-grids#readme"
 # -------------------------
 
 [tool.scikit-build]
-wheel.packages = ["green_grids"]
-sdist.include = ["python"]
+wheel.packages = ["python/green_grids"]
+# sdist.include = ["python"]
 build-dir = "build/{wheel_tag}"
 
 # -------------------------

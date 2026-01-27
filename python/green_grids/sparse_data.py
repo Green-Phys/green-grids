@@ -319,7 +319,7 @@ class PairedSparseData:
         """
         with h5py.File(filename, 'r') as f:
             grp = f[basepath]
-            if not gridnames:
+            if gridnames is None:
                 gridnames = [k.split('/')[-1] for k in grp.keys()]
             assert len(gridnames) == 2, \
                 'unable to determine grids in file {}'.format(filename)
