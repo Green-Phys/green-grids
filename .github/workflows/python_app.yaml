@@ -29,7 +29,7 @@ jobs:
         sudo apt-get update
         sudo apt-get install lcov libhdf5-dev
         python -m pip install --upgrade pip
-        pip install flake8 pytest coverage
+        pip install flake8 pytest coverage pytest-cov
         pip install -r python/requirements.txt
     - name: Lint with flake8
       run: |
@@ -39,11 +39,9 @@ jobs:
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Install package
-      run: |
-        pip install .
+      run: pip install .
     - name: Test with pytest
-      run: |
-        pytest --cov python/
+      run: pytest --cov python/
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3
       env:
