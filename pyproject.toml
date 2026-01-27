@@ -1,0 +1,89 @@
+[build-system]
+requires = ["setuptools>=68", "wheel", "build"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "green-grids"
+version = "0.1.0"
+description = "Sparse-grid tools for Green's function methods in physics"
+readme = "README.md"
+requires-python = ">=3.9,<3.13"
+license = { text = "MIT" }           # or your license
+authors = [
+  { name = "Sergei Iskakov", email = "siskakov@umich.edu" }
+]
+maintainers = [
+  { name = "Gaurav Harsha", email = "gharsha@umich.edu" },
+  { name = "Sergei Iskakov", email = "siskakov@umich.edu" }
+]
+
+keywords = [
+  "physics",
+  "greens-functions",
+  "sparse-grids",
+  "numerical-methods",
+  "many-body",
+  "scientific-computing"
+]
+
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Science/Research",
+  "Topic :: Scientific/Engineering :: Physics",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Operating System :: POSIX",
+  "Operating System :: Unix",
+  "Operating System :: MacOS",
+]
+
+dependencies = [
+  "numpy>=1.23",
+  "scipy>=1.5",
+  "h5py",
+  "mpmath",
+  "sparse-ir<=1.1.7",
+]
+
+[project.urls]
+Homepage = "https://green-phys.org"
+Repository = "https://github.com/green-phys/green-grids"
+Issues = "https://github.com/green-phys/green-grids/issues"
+Documentation = "https://github.com/green-phys/python/green-grids#readme"
+
+# -------------------------
+# scikit-build configuration
+# -------------------------
+
+[tool.setuptools]
+package-dir = {"" = "."}
+
+[tool.setuptools.packages.find]
+where = ["python"]
+include = ["green_grids", "green_grids.*"]
+
+# -------------------------
+# Optional dev tooling
+# -------------------------
+
+[project.optional-dependencies]
+tests = ["coverage>=5.0.3", "pytest", "pytest-benchmark[histogram]>=3.2.1"]
+
+# -------------------------
+# CI Build Wheel configuration
+# -------------------------
+
+[tool.cibuildwheel]
+skip = ["*-musllinux*"]
+test-requires = "pytest"
+test-command = "pytest {project}/python/tests"
+
+# -------------------------
+# Linux-specific settings
+# -------------------------
+
+manylinux-x86_64-image = "manylinux_2_28"
