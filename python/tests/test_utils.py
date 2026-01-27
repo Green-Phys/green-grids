@@ -2,7 +2,7 @@ import h5py
 import numpy as np
 import shutil
 from numpy.testing import assert_allclose
-from sparse_grid import utils
+from green_grids import utils
 
 from .common import HDF5TestCase
 

@@ -1,8 +1,8 @@
 import numpy as np
-import sparse_grid.transform as tf
+import green_grids.transform as tf
 import unittest
 from numpy.testing import assert_allclose
-from sparse_grid import get_fermi_bose_pair
+from green_grids import get_fermi_bose_pair
 
 
 class TransformTest(unittest.TestCase):

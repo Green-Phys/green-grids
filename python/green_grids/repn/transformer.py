@@ -1,6 +1,6 @@
 import numpy as np
 from abc import ABC, abstractmethod
-from sparse_grid.sparse_data import SparseData
+from green_grids.sparse_data import SparseData
 from warnings import warn
 
 

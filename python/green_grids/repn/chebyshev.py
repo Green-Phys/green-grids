@@ -3,9 +3,9 @@
 import mpmath as mp
 import numpy as np
 
-from sparse_grid import utils
-from sparse_grid.repn.basis import SparseBasis
-from sparse_grid.repn.transformer import SparseTransformer
+from green_grids import utils
+from green_grids.repn.basis import SparseBasis
+from green_grids.repn.transformer import SparseTransformer
 
 
 def get_xroot(order):

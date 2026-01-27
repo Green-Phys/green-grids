@@ -1,7 +1,8 @@
 import numpy as np
 import scipy.linalg as la
-from sparse_grid.repn.basis import SparseBasis
-from sparse_grid.repn.transformer import SparseTransformer
+from green_grids.repn.basis import SparseBasis
+from green_grids.repn.transformer import SparseTransformer
+from sparse_ir import poly as spir_poly
 import sparse_ir
 
 _stats_str = {'fermi': 'F', 'bose': 'B'}
@@ -10,7 +11,7 @@ _stats_str = {'fermi': 'F', 'bose': 'B'}
 class Basis(SparseBasis):
 
     def __init__(self, lambda_, ncoeff, stats, trim=True, h5file=""):
-        sparse_ir.poly.PiecewiseLegendreFT._DEFAULT_GRID =  np.hstack([np.arange(2**6), (2**np.linspace(6, 30, 16*(30-6)+1)).astype(np.int64)])
+        spir_poly.PiecewiseLegendreFT._DEFAULT_GRID =  np.hstack([np.arange(2**6), (2**np.linspace(6, 30, 16*(30-6)+1)).astype(np.int64)])
         self._basis = sparse_ir.FiniteTempBasis(_stats_str[stats], beta=1.0, wmax=int(float(lambda_)))
         self.Lambda = lambda_
         if ncoeff is None:

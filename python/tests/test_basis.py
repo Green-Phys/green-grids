@@ -1,8 +1,8 @@
 import numpy as np
 import unittest
 from numpy.testing import assert_allclose
-from sparse_grid.repn.chebyshev import Basis as ChebyshevBasis
-from sparse_grid.repn.ir import Basis as IRBasis
+from green_grids.repn.chebyshev import Basis as ChebyshevBasis
+from green_grids.repn.ir import Basis as IRBasis
 
 
 class ChebyshevBasisTest(unittest.TestCase):

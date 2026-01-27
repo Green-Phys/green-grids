@@ -1,7 +1,7 @@
 import argparse
 
-import sparse_grid
-import sparse_grid.repn.generator as generator
+import green_grids
+import green_grids.repn.generator as generator
 
 CHEBYSHEV_BASIS = "chebyshev"
 IR_BASIS = "ir"
@@ -53,7 +53,7 @@ def ir_generator(args, stats):
     -------
     generator : sparse_grid.repn.Generator
     '''
-    return sparse_grid.get_generator(args.basis, args.irlambda, args.ncoeff,
+    return green_grids.get_generator(args.basis, args.irlambda, args.ncoeff,
                                      stats, args.trim, args.h5file)
 
 
@@ -85,7 +85,7 @@ def chebyshev_generator(args, stats):
     -------
     generator : sparse_grid.repn.Generator
     '''
-    return sparse_grid.get_generator(args.basis, args.ncoeff, stats, args.trim,
+    return green_grids.get_generator(args.basis, args.ncoeff, stats, args.trim,
                                      args.prec)
 
 

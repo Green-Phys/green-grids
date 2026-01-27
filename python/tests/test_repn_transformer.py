@@ -1,10 +1,10 @@
 import numpy as np
 import unittest
 from numpy.testing import assert_allclose
-from sparse_grid.repn.chebyshev import Transformer as ChebyshevTransformer
-from sparse_grid.repn.ir import Transformer as IRTransformer
-from sparse_grid.repn.transformer import SparseTransformer
-from sparse_grid.sparse_data import SparseData
+from green_grids.repn.chebyshev import Transformer as ChebyshevTransformer
+from green_grids.repn.ir import Transformer as IRTransformer
+from green_grids.repn.transformer import SparseTransformer
+from green_grids.sparse_data import SparseData
 
 
 class FakeTransformer(SparseTransformer):

@@ -2,7 +2,7 @@ import h5py
 import numpy as np
 import re
 from dataclasses import dataclass
-from sparse_grid.utils import h5save_dict, h5load_dict
+from green_grids.utils import h5save_dict, h5load_dict
 from typing import Optional
 
 

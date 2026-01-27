@@ -3,8 +3,8 @@ import numpy as np
 import os
 import shutil
 from contextlib import contextmanager
-from sparse_grid.sparse_data import PairedSparseData, SparseData
-from sparse_grid.utils import h5save_dict
+from green_grids.sparse_data import PairedSparseData, SparseData
+from green_grids.utils import h5save_dict
 
 from .common import HDF5TestCase
 
