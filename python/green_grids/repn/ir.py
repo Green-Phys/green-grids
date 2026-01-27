@@ -11,7 +11,9 @@ _stats_str = {'fermi': 'F', 'bose': 'B'}
 class Basis(SparseBasis):
 
     def __init__(self, lambda_, ncoeff, stats, trim=True, h5file=""):
-        spir_poly.PiecewiseLegendreFT._DEFAULT_GRID =  np.hstack([np.arange(2**6), (2**np.linspace(6, 30, 16*(30-6)+1)).astype(np.int64)])
+        spir_poly.PiecewiseLegendreFT._DEFAULT_GRID = np.hstack(
+            [np.arange(2**6), (2**np.linspace(6, 30, 16 * (30 - 6) + 1)).astype(np.int64)]
+        )
         self._basis = sparse_ir.FiniteTempBasis(_stats_str[stats], beta=1.0, wmax=int(float(lambda_)))
         self.Lambda = lambda_
         if ncoeff is None:
@@ -28,10 +30,10 @@ class Basis(SparseBasis):
         return sparse_ir.basis._default_sampling_points(self._basis.sve_result.u, ncoeff)
 
     def _uxl(self, l, x):
-        return self._basis.u[:self._dim]((np.asarray(x) + 1)/2).T * np.sqrt(1.0/2.0)
+        return self._basis.u[:self._dim]((np.asarray(x) + 1) / 2).T * np.sqrt(1.0 / 2.0)
 
     def compute_unl(self, n, whichl=None):
-        return self._basis.uhat[:self._dim]((2 * n +  (1 if self.stats == 'fermi' else 0))).T
+        return self._basis.uhat[:self._dim]((2 * n + (1 if self.stats == 'fermi' else 0))).T
 
     def metadata(self, ncoeff):
         return {
