@@ -83,3 +83,10 @@ test-command = "pytest {project}/python/tests"
 # -------------------------
 
 manylinux-x86_64-image = "manylinux_2_28"
+
+# -------------------------
+# Coverage configuration
+# -------------------------
+[tool.coverage.run]
+branch = true
+source = ["python/green_grids"]
