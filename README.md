@@ -41,15 +41,35 @@
 ## Dependencies
 
 - Python:
-    - Hiroshi's `sparse_ir`
-    - `numpy`, `scipy`, `h5py`, `mpmath`, ...
+    - [`sparse-ir`](https://github.com/spare-ir)
+    - `numpy`, `scipy`, `h5py`, and `mpmath`.
 - C++:
     - Green/h5pp: for compatibility with h5py
     - Green/ndarrays: for compatibility with numpy.ndarray
     - Green/params: for comandline parameters
+    - CMake: Version 3.27 or later
 
+## Installation
 
+C++ installation uses CMake in a straightforward manner:
+```bash
+mkdir build && cd build
+cmake .. -DCMAKE_INSTALL_PREFIX=.
+make -j 4
+make install
+make test  # Test the code
+```
 
+The Python pacakge for `green-grids` can be installed using PyPI:
+```bash
+pip install green-grids
+```
+or simply by building from source as:
+```bash
+git clone https://github.com/Green-Phys/green-grids
+cd green-grids
+pip install .
+```
 
 # Acknowledgements
 
