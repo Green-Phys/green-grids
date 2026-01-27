@@ -1,6 +1,6 @@
 [build-system]
-requires = ["setuptools>=68", "wheel", "build"]
-build-backend = "setuptools.build_meta"
+requires = ["scikit-build-core>=0.9", "wheel"]
+build-backend = "scikit_build_core.build"
 
 [project]
 name = "green-grids"
@@ -25,7 +25,6 @@ keywords = [
   "many-body",
   "scientific-computing"
 ]
-
 classifiers = [
   "Development Status :: 4 - Beta",
   "Intended Audience :: Science/Research",
@@ -40,7 +39,6 @@ classifiers = [
   "Operating System :: Unix",
   "Operating System :: MacOS",
 ]
-
 dependencies = [
   "numpy>=1.23",
   "scipy>=1.5",
@@ -59,12 +57,10 @@ Documentation = "https://github.com/green-phys/python/green-grids#readme"
 # scikit-build configuration
 # -------------------------
 
-[tool.setuptools]
-package-dir = {"" = "."}
-
-[tool.setuptools.packages.find]
-where = ["python"]
-include = ["green_grids", "green_grids.*"]
+[tool.scikit-build]
+wheel.packages = ["green_grids"]
+sdist.include = ["python"]
+build-dir = "build/{wheel_tag}"
 
 # -------------------------
 # Optional dev tooling
