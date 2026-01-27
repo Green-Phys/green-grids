@@ -51,7 +51,7 @@ dependencies = [
 Homepage = "https://green-phys.org"
 Repository = "https://github.com/green-phys/green-grids"
 Issues = "https://github.com/green-phys/green-grids/issues"
-Documentation = "https://github.com/green-phys/python/green-grids#readme"
+Documentation = "https://github.com/green-phys/green-grids#readme"
 
 # -------------------------
 # scikit-build configuration
