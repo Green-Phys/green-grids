@@ -141,7 +141,7 @@ class IRBasisTest(unittest.TestCase):
 
     def test_fermi_grid(self):
         basis = IRBasis(1e1, 2, 'fermi')
-        xgrid_expected = np.array([0.5, -0.5])
+        xgrid_expected = np.array([-0.702569851992996, 0.702569851992996])
         wgrid_expected = np.array([-1, 0], dtype=int)
 
         assert_allclose(np.sort(basis.sampling_points_x()),
@@ -152,7 +152,7 @@ class IRBasisTest(unittest.TestCase):
 
     def test_bose_grid(self):
         basis = IRBasis(1e1, 3, 'bose')
-        xgrid_expected = np.array([-8.971930e-01, 0.0, 8.971930e-01])
+        xgrid_expected = np.array([-0.838639551136778, 0., 0.838639551136778])
         wgrid_expected = np.array([-1, 0, 1], dtype=int)
 
         assert_allclose(np.sort(basis.sampling_points_x()),
@@ -163,19 +163,19 @@ class IRBasisTest(unittest.TestCase):
 
     def test_bose_transform(self):
         uxl_data_0 = [
-            53.0330395953343, -53.0330396010825, 35.2351082797355,
-            -35.2351085579774, 27.7300102274779, -27.7300150463786,
-            23.1488795665343, -23.1489313987664, 19.9105082263949
+            13.745432400947653, -17.721221618995756,  21.429102790554534,
+            -23.60428968283704 ,  22.3918778239321  , -21.95339837035436,
+            19.861605527659655, -18.359544957426447,  16.36432753762062
         ]
         uxl_data_10 = [
-            1.67201621220835e-05, 1.6714905012999e-05, -0.000593484301295908,
-            -0.000593284323434273, 0.00718234433152259, 0.00717953428056469,
-            -0.0489376157529712, -0.0489124370514369, 0.217033451984615
+            0.286823988021064, 0.094545173053576, -0.440994942887295,
+            -0.208862534963973, 0.439843513911161,  0.331487269960403,
+            -0.340586641751847, -0.436536359352603,  0.191329811128685
         ]
         uwl_data_8 = [
-            0.0267773343787626, 0.00011984631703555j, -0.0444515093312776,
-            -0.00100295468396756j, 0.0676847929082761, 0.00447541434393243j,
-            -0.0953634348544582, -0.0147125670905463j, 0.122735156218375
+            0.255415222461193, 0.116395512483477j, -0.07675446293742,
+            -0.232745340169882j, -0.197612226322009, 0.312355551945083j,
+            0.321493009265652, -0.33201752882286j, -0.327777925931597
         ]
 
         basis = IRBasis(1e4, 19, 'bose')
@@ -183,25 +183,26 @@ class IRBasisTest(unittest.TestCase):
         wgrid = basis.sampling_points_matsubara()
         uxl = basis.uxl(np.arange(xgrid.shape[0]), xgrid)
         unl = basis.compute_unl(wgrid)
+
         self.assertTrue(np.allclose(uxl[0, :9], uxl_data_0))
         self.assertTrue(np.allclose(uxl[10, :9], uxl_data_10))
         self.assertTrue(np.allclose(unl[8, :9], uwl_data_8))
 
     def test_fermi_transform(self):
         uxl_data_0 = [
-            -19.6268475731047, 18.6229921151091, -17.6693953629138,
-            16.7182220035211, -15.7919670482309, 14.8754781258815,
-            -13.9748611946433, 13.0855267310788, -12.2091799590797
+            -12.054785431598697, 10.477147954856228, -8.981242780476586,
+            7.532701884783, -6.146120687665874, 4.811408704447319,
+            -3.531319270454278, 2.30281481655022, -1.126051446254826
         ]
         uxl_data_10 = [
-            -0.309710530627941, 0.297276179691631, 0.358903419986585,
-            -0.241314482851883, -0.400131026972182, 0.177890877835628,
-            0.431725549355425, -0.108196471684818, -0.452262578237676
+            -0.322993474112357, 0.284162115673715, 0.372417191068422,
+            -0.223040032390382, -0.412570125446417, 0.154215657870916,
+            0.441635049846618, -0.079204602655054, -0.458106832919598,
         ]
         uwl_data_8 = [
             -0.179416049057764j, -0.222380421870855, 0.212669675007241j,
-            0.189296146549642, -0.0919630698604766j, -0.0141790064888402,
-            -0.0787720187062291j, -0.152479503509744, 0.213106209267317j
+            0.189296146549642, -0.091963069860477j, -0.01417900648884,
+            -0.078772018706229j, -0.152479503509744,  0.213106209267317j
         ]
 
         basis = IRBasis(1e4, 40, 'fermi')
@@ -214,6 +215,18 @@ class IRBasisTest(unittest.TestCase):
         self.assertTrue(np.allclose(uxl[10, -9:], uxl_data_10))
         self.assertTrue(np.allclose(unl[8, :9], uwl_data_8))
 
+    def test_fermi_atomic_limit(self):
+        basis = IRBasis(1e2, 10, 'fermi')
+        xgrid = basis.sampling_points_x()
+        wgrid = basis.sampling_points_matsubara()
+        g_atomic_iw = 1./((2*wgrid + 1)*np.pi*1.j)
+        uxl = basis.uxl(np.arange(xgrid.shape[0], dtype=int), xgrid)
+        ulx = basis.ulx(uxl)
+        unl = basis.compute_unl(wgrid)
+        uln = basis.compute_uln(unl)
+        g_atomic_x = np.einsum("xl,ln,n->x", uxl,uln,g_atomic_iw)
+        g_atomic_iw_new = np.einsum("nl,lx,x->n", unl,ulx,g_atomic_x)
+        self.assertTrue(np.allclose(g_atomic_iw, g_atomic_iw_new))
 
 if __name__ == '__main__':
     unittest.main()

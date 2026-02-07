@@ -21,7 +21,7 @@ class Basis(SparseBasis):
         return la.pinv(uxl)
 
     def _sampling_points_matsubara(self, ncoeff: int):
-        return sparse_ir.basis._default_matsubara_sampling_points(self._basis._uhat_full, ncoeff)
+        return (sparse_ir.basis._default_matsubara_sampling_points(self._basis._uhat_full, ncoeff) - (1 if self.stats == 'fermi' else 0)) // 2
 
     def _sampling_points_x(self, ncoeff: int):
         return sparse_ir.basis._default_sampling_points(self._basis.sve_result.u, ncoeff)
