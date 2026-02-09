@@ -1,3 +1,4 @@
 ignore:
   - "test/*"
   - "python/**/tests/**"
+  - "python/generate.py"
