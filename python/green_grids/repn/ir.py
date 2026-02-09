@@ -1,7 +1,7 @@
 import numpy as np
 import scipy.linalg as la
-from green_grids.repn.basis import SparseBasis
-from green_grids.repn.transformer import SparseTransformer
+from .basis import SparseBasis
+from .transformer import SparseTransformer
 from sparse_ir import poly as spir_poly
 import sparse_ir
 

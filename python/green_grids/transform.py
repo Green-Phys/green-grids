@@ -1,6 +1,6 @@
 import numpy as np
 
-from green_grids.sparse_data import SparseData, PairedSparseData
+from .sparse_data import SparseData, PairedSparseData
 
 
 def l_to_tau(data: SparseData, fl: np.ndarray):

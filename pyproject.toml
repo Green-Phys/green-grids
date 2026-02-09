@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "green-grids"
-version = "0.1.0"
+dynamic = ["version"]
 description = "Sparse-grid tools for Green's function methods in physics"
 readme = "README.md"
 requires-python = ">=3.9,<3.13"
@@ -16,7 +16,6 @@ maintainers = [
   { name = "Gaurav Harsha", email = "gharsha@umich.edu" },
   { name = "Sergei Iskakov", email = "siskakov@umich.edu" }
 ]
-
 keywords = [
   "physics",
   "greens-functions",
@@ -64,6 +63,9 @@ package-dir = {"" = "python"}
 [tool.setuptools.packages.find]
 where = ["python"]
 include = ["green_grids", "green_grids.*"]
+
+[tool.setuptools.dynamic]
+version = {attr = "green_grids.version.__version__"}
 
 # -------------------------
 # Optional dev tooling

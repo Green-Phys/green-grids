@@ -1,6 +1,6 @@
 import numpy as np
-from green_grids.repn.basis import SparseBasis
-from green_grids.sparse_data import SparseData, PairedSparseData
+from .basis import SparseBasis
+from ..sparse_data import SparseData, PairedSparseData
 from warnings import warn
 
 _stats_str = {'fermi': 'F', 'bose': 'B'}

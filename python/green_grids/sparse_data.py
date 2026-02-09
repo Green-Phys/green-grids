@@ -2,7 +2,8 @@ import h5py
 import numpy as np
 import re
 from dataclasses import dataclass
-from green_grids.utils import h5save_dict, h5load_dict
+from .utils import h5save_dict, h5load_dict
+from .version import __version__
 from typing import Optional
 
 
@@ -281,6 +282,8 @@ class PairedSparseData:
             basepath += '/'
 
         with h5py.File(filename, 'w') as f:
+            if basepath == '/':
+                f.attrs['__grids_version__'] = __version__
             grp = f.require_group(basepath)
             self.save_to(grp)
 

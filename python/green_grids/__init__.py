@@ -1,5 +1,10 @@
-from green_grids.repn import chebyshev, ir, generator
-from green_grids.sparse_data import SparseData, PairedSparseData
+from .repn import chebyshev, ir, generator
+from .sparse_data import SparseData, PairedSparseData
+from .version import __version__
+
+
+__all__ = ["__version__",]
+
 
 ALL_REPNS = {
     'chebyshev': chebyshev,
