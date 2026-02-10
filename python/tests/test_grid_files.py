@@ -47,7 +47,7 @@ def test_ir_gridfiles(ir_lambda, outfile):
     assert Path(outfile).exists(), f"Generated file {outfile} does not exist."
 
     # Use the diff_hdf5 function to compare the contents of the HDF5 files
-    gridfile_diff(reference_file, outfile), f"Contents of {outfile} do not match {reference_file}."
+    gridfile_diff(reference_file, outfile)
 
     # Clean up generated file
     Path(outfile).unlink()
@@ -83,7 +83,7 @@ def test_chebyshev_gridfiles(ncoeff, outfile):
     assert Path(outfile).exists(), f"Generated file {outfile} does not exist."
 
     # Use the diff_hdf5 function to compare the contents of the HDF5 files
-    gridfile_diff(reference_file, outfile), f"Contents of {outfile} do not match {reference_file}."
+    gridfile_diff(reference_file, outfile)
 
     # Clean up generated file
     Path(outfile).unlink()

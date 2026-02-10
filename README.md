@@ -46,7 +46,7 @@
 - C++:
     - Green/h5pp: for compatibility with h5py
     - Green/ndarrays: for compatibility with numpy.ndarray
-    - Green/params: for comandline parameters
+    - Green/params: for command-line parameters
     - CMake: Version 3.27 or later
 
 ## Installation

@@ -66,8 +66,8 @@ namespace green::grids {
     char suffixV[32] = "";
     char suffixM[32] = "";
   
-    int parsed_in = std::sscanf(v.c_str(), "%d.%d.%d%31s", &major_Vin, &minor_Vin, &patch_Vin, suffixV);
-    int parsed_ref = std::sscanf(GRIDS_MIN_VERSION.c_str(), "%d.%d.%d%31s", &major_Vref, &minor_Vref, &patch_Vref, suffixM);
+    int parsed_in = std::sscanf(v.c_str(), "%d.%d.%d%30s", &major_Vin, &minor_Vin, &patch_Vin, suffixV);
+    int parsed_ref = std::sscanf(GRIDS_MIN_VERSION.c_str(), "%d.%d.%d%30s", &major_Vref, &minor_Vref, &patch_Vref, suffixM);
 
     if (parsed_in < 3 || parsed_ref < 3) {
       throw std::runtime_error("Version string format is incorrect. Expected format: major.minor.patch[suffix]");
