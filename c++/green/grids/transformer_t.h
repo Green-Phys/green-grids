@@ -52,8 +52,25 @@ namespace green::grids {
 
     sparse_data _sd;
 
+    // Version Info
+    std::string _version = "";
+
   public:
-                                transformer_t(const green::params::params& p) : _sd(p) { read_trans(p["grid_file"]); }
+    transformer_t(const green::params::params& p) : _sd(p) { read_trans(p["grid_file"]); }
+
+    /**
+     * @brief Set the version string
+     * 
+     * @param v - std::string
+     */
+    void set_version(const std::string& v) { _version = v; }
+
+    /**
+     * @brief Get the version string
+     * 
+     * @param v - std::string
+     */
+    void get_version(std::string& v) const { v = _version; }
 
     /**
      * @param n   - [INPUT] Matsubara frequency number, omega(n) = iw_n

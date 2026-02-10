@@ -159,6 +159,14 @@ void check_transformer(green::grids::transformer_t& tr) {
     double leakage = tr.check_chebyshev(X1t, 1);
     REQUIRE(leakage < 1e-10);
   }
+  SECTION("Check Version Info") {
+    std::string v;
+    tr.get_version(v);
+    REQUIRE(v == "0.3.0");
+    std::string v2 = "0.2.0";  // Older version
+    REQUIRE(green::grids::CheckVersion(v));
+    REQUIRE_FALSE(green::grids::CheckVersion(v2));
+  }
 }
 
 TEST_CASE("Grids") {
@@ -200,6 +208,26 @@ TEST_CASE("Grids") {
     auto [argc, argv]      = get_argc_argv(args);
     p.parse(argc, argv);
     REQUIRE_THROWS_AS(green::grids::transformer_t(p), green::grids::grids_file_not_found_error);
+  }
+
+  SECTION("Outdated grid - compatible") {
+    auto p = green::params::params("DESCR");
+    green::grids::define_parameters(p);
+    std::string input_file = TEST_PATH + "/1e4_old_compatible.h5"s;
+    std::string args       = "test --BETA 10 --grid_file " + input_file;
+    auto [argc, argv]      = get_argc_argv(args);
+    p.parse(argc, argv);
+    REQUIRE_NOTHROW(green::grids::transformer_t(p));
+  }
+
+  SECTION("Outdated grid - incompatible") {
+    auto p = green::params::params("DESCR");
+    green::grids::define_parameters(p);
+    std::string input_file = TEST_PATH + "/1e4_old_incompatible.h5"s;
+    std::string args       = "test --BETA 10 --grid_file " + input_file;
+    auto [argc, argv]      = get_argc_argv(args);
+    p.parse(argc, argv);
+    REQUIRE_THROWS_AS(green::grids::transformer_t(p), green::grids::outdated_grids_file_error);
   }
 
 #ifndef NDEBUG
