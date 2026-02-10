@@ -8,6 +8,7 @@ from green_grids import get_generator, generator
 def gridfile_diff(file1, file2):
     with h5py.File(file1, 'r') as f1, h5py.File(file2, 'r') as f2:
         # Compare keys
+        assert f1.attrs['__grids_version__'] == f2.attrs['__grids_version__'], "Grid file versions do not match."
         keys = ["ngrid", "u1l_neg", "u1l_pos", "ulw", "ulx", "uwl", "uxl", "uxl_other", "wgrid", "xgrid"]
         stats = ["fermi", "bose"]
         for st in stats:
