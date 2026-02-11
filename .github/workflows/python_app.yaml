@@ -41,7 +41,7 @@ jobs:
     - name: Install package
       run: pip install .
     - name: Test with pytest
-      run: pytest -m 'not slow' --cov python/
+      run: pytest --cov python/
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3
       env:

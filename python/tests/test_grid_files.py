@@ -23,8 +23,8 @@ def gridfile_diff(file1, file2):
     [
         (1e4, "1e4.h5"),
         (1e5, "1e5.h5"),
-        (1e6, "1e6.h5"),
-        (1e7, "1e7.h5"),
+        pytest.param(1e6, "1e6.h5", marks=pytest.mark.slow),
+        pytest.param(1e7, "1e7.h5", marks=pytest.mark.slow),
         pytest.param(1e8, "1e8.h5", marks=pytest.mark.slow),
     ]
 )
@@ -58,8 +58,8 @@ def test_ir_gridfiles(ir_lambda, outfile, tmp_path):
     [
         (100, "100.h5"),
         (150, "150.h5"),
-        (200, "200.h5"),
-        (300, "300.h5"),
+        pytest.param(200, "200.h5", marks=pytest.mark.slow),
+        pytest.param(300, "300.h5", marks=pytest.mark.slow),
         pytest.param(350, "350.h5", marks=pytest.mark.slow),
         pytest.param(450, "450.h5", marks=pytest.mark.slow),
     ]
