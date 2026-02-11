@@ -11,6 +11,7 @@
 #include "except.h"
 
 #include <Eigen/Dense>
+#include <cstdio>
 
 using namespace std::string_literals;
 
@@ -54,12 +55,15 @@ namespace green::grids {
   std::string grid_path(const std::string& path);
 
   /**
-   * @brief Compare two version strings
-   * 
-   * @param v (std::string)
-   * @return true if v >= INPUT_VERSION
-   * @return false otherwise
-   * @throws outdated_grids_file_error if version string format is incorrect
+   * @brief Check whether a version string satisfies the minimum required GRIDS version.
+   *
+   * Compares the given version string against the library's minimum supported
+   * GRIDS version specified by `GRIDS_MIN_VERSION`.
+   *
+   * @param v Version string to check (e.g. "0.2.4").
+   * @return true if v is greater than or equal to GRIDS_MIN_VERSION.
+   * @return false if v is less than GRIDS_MIN_VERSION.
+   * @throws outdated_grids_file_error if the format of v or GRIDS_MIN_VERSION is incorrect.
    */
   inline bool CheckVersion(const std::string& v) {
     int major_Vin = 0, minor_Vin = 0, patch_Vin = 0;

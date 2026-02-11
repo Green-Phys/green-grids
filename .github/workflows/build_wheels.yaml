@@ -15,52 +15,6 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build_wheels:
-    name: Build wheels on ${{ matrix.os }}-${{ matrix.arch }}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - os: ubuntu-22.04
-            arch: x86_64
-            cibw_archs: x86_64
-          - os: macos-14
-            arch: arm64
-            cibw_archs: arm64
-            target: '14.0'
-
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Set up QEMU
-        if: runner.os == 'Linux'
-        uses: docker/setup-qemu-action@v3
-
-      - name: Build wheels
-        uses: pypa/cibuildwheel@v2.17.0
-        env:
-          CIBW_BUILD: cp39-* cp310-* cp311-* cp312-* cp313-*
-          CIBW_ARCHS: ${{ matrix.cibw_archs }}
-          CIBW_SKIP: '*-musllinux_*'
-          CIBW_ENVIRONMENT_MACOS: MACOSX_DEPLOYMENT_TARGET=${{ matrix.target }}
-          CIBW_BEFORE_BUILD: |
-            if [[ "$CIBW_PLATFORM" == "macos" ]]; then
-              brew update
-              brew install openblas hdf5
-            elif [[ "$CIBW_PLATFORM" == "linux" ]]; then
-              yum install -y openblas-devel hdf5-devel
-              pip install meson
-            fi
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: wheels-${{ matrix.os }}-${{ matrix.arch }}
-          path: wheelhouse/*.whl
-          if-no-files-found: error
-
   build_sdist:
     name: Build source distribution
     runs-on: ubuntu-latest
@@ -73,17 +27,17 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Build sdist
-        run: pipx run build --sdist
+      - name: Build distributions
+        run: pipx run build
 
       - uses: actions/upload-artifact@v4
         with:
           name: sdist
-          path: dist/*.tar.gz
+          path: dist/*
           if-no-files-found: error
 
   upload_pypi:
-    needs: [build_wheels, build_sdist]
+    needs: [build_sdist]
     runs-on: ubuntu-latest
     environment: release
     permissions:
@@ -93,9 +47,8 @@ jobs:
     steps:
       - uses: actions/download-artifact@v4
         with:
-          pattern: wheels-* sdist
+          pattern: sdist
           path: dist
-          merge-multiple: true
 
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1

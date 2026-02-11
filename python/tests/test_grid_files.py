@@ -30,14 +30,14 @@ def gridfile_diff(file1, file2):
 )
 def test_ir_gridfiles(ir_lambda, outfile, tmp_path):
     # create temporary directory for generated files
-    outfile = tmp_path / outfile
+    tmp_outfile = tmp_path / outfile
 
     # Syntax: get_generator(basis, ir_lambda, ncoeff, stats, trim, h5file to read)
     fermi_generator = get_generator("ir", ir_lambda, None, "fermi", True, None)
     bose_generator = get_generator("ir", ir_lambda, None, "bose", True, None)
     sparse_data = generator.generate_paired_sparse_data(fermi_generator, bose_generator, "fermi", "bose")
     # save data
-    sparse_data.save_hdf5(outfile)
+    sparse_data.save_hdf5(tmp_outfile)
 
     # Compare HDF5 files
     test_dir = Path(__file__).resolve().parent
@@ -47,10 +47,10 @@ def test_ir_gridfiles(ir_lambda, outfile, tmp_path):
 
     # Check if the generated file matches the reference file
     assert reference_file.exists(), f"Reference file {reference_file} does not exist."
-    assert Path(outfile).exists(), f"Generated file {outfile} does not exist."
+    assert tmp_outfile.exists(), f"Generated file {tmp_outfile} does not exist."
 
     # Use the diff_hdf5 function to compare the contents of the HDF5 files
-    gridfile_diff(reference_file, outfile)
+    gridfile_diff(reference_file, tmp_outfile)
 
 
 @pytest.mark.parametrize(
@@ -66,14 +66,14 @@ def test_ir_gridfiles(ir_lambda, outfile, tmp_path):
 )
 def test_chebyshev_gridfiles(ncoeff, outfile, tmp_path):
     # create temporary directory for generated files
-    outfile = tmp_path / outfile
+    tmp_outfile = tmp_path / outfile
 
     # Syntax: get_generator(basis, ncoeff, stats, trim, precision)
     fermi_generator = get_generator("chebyshev", ncoeff, "fermi", True, None)
     bose_generator = get_generator("chebyshev", ncoeff, "bose", True, None)
     sparse_data = generator.generate_paired_sparse_data(fermi_generator, bose_generator, "fermi", "bose")
     # save data
-    sparse_data.save_hdf5(outfile)
+    sparse_data.save_hdf5(tmp_outfile)
 
     # Compare HDF5 files
     test_dir = Path(__file__).resolve().parent
@@ -83,7 +83,7 @@ def test_chebyshev_gridfiles(ncoeff, outfile, tmp_path):
 
     # Check if the generated file matches the reference file
     assert reference_file.exists(), f"Reference file {reference_file} does not exist."
-    assert Path(outfile).exists(), f"Generated file {outfile} does not exist."
+    assert tmp_outfile.exists(), f"Generated file {tmp_outfile} does not exist."
 
     # Use the diff_hdf5 function to compare the contents of the HDF5 files
-    gridfile_diff(reference_file, outfile)
+    gridfile_diff(reference_file, tmp_outfile)
