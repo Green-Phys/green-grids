@@ -25,10 +25,13 @@ def gridfile_diff(file1, file2):
         (1e5, "1e5.h5"),
         (1e6, "1e6.h5"),
         (1e7, "1e7.h5"),
-        (1e8, "1e8.h5"),
+        pytest.param(1e8, "1e8.h5", marks=pytest.mark.slow),
     ]
 )
-def test_ir_gridfiles(ir_lambda, outfile):
+def test_ir_gridfiles(ir_lambda, outfile, tmp_path):
+    # create temporary directory for generated files
+    outfile = tmp_path / outfile
+
     # Syntax: get_generator(basis, ir_lambda, ncoeff, stats, trim, h5file to read)
     fermi_generator = get_generator("ir", ir_lambda, None, "fermi", True, None)
     bose_generator = get_generator("ir", ir_lambda, None, "bose", True, None)
@@ -49,9 +52,6 @@ def test_ir_gridfiles(ir_lambda, outfile):
     # Use the diff_hdf5 function to compare the contents of the HDF5 files
     gridfile_diff(reference_file, outfile)
 
-    # Clean up generated file
-    Path(outfile).unlink()
-
 
 @pytest.mark.parametrize(
     "ncoeff, outfile",
@@ -60,11 +60,14 @@ def test_ir_gridfiles(ir_lambda, outfile):
         (150, "150.h5"),
         (200, "200.h5"),
         (300, "300.h5"),
-        (350, "350.h5"),
-        (450, "450.h5"),
+        pytest.param(350, "350.h5", marks=pytest.mark.slow),
+        pytest.param(450, "450.h5", marks=pytest.mark.slow),
     ]
 )
-def test_chebyshev_gridfiles(ncoeff, outfile):
+def test_chebyshev_gridfiles(ncoeff, outfile, tmp_path):
+    # create temporary directory for generated files
+    outfile = tmp_path / outfile
+
     # Syntax: get_generator(basis, ncoeff, stats, trim, precision)
     fermi_generator = get_generator("chebyshev", ncoeff, "fermi", True, None)
     bose_generator = get_generator("chebyshev", ncoeff, "bose", True, None)
@@ -84,6 +87,3 @@ def test_chebyshev_gridfiles(ncoeff, outfile):
 
     # Use the diff_hdf5 function to compare the contents of the HDF5 files
     gridfile_diff(reference_file, outfile)
-
-    # Clean up generated file
-    Path(outfile).unlink()

@@ -8,6 +8,7 @@
 #include <green/ndarray/ndarray.h>
 #include <green/ndarray/ndarray_math.h>
 #include <green/params/params.h>
+#include "except.h"
 
 #include <Eigen/Dense>
 
@@ -58,6 +59,7 @@ namespace green::grids {
    * @param v (std::string)
    * @return true if v >= INPUT_VERSION
    * @return false otherwise
+   * @throws outdated_grids_file_error if version string format is incorrect
    */
   inline bool CheckVersion(const std::string& v) {
     int major_Vin = 0, minor_Vin = 0, patch_Vin = 0;
@@ -70,7 +72,7 @@ namespace green::grids {
     int parsed_ref = std::sscanf(GRIDS_MIN_VERSION.c_str(), "%d.%d.%d%30s", &major_Vref, &minor_Vref, &patch_Vref, suffixM);
 
     if (parsed_in < 3 || parsed_ref < 3) {
-      throw std::runtime_error("Version string format is incorrect. Expected format: major.minor.patch[suffix]");
+      throw outdated_grids_file_error("Version string format is incorrect. Expected format: major.minor.patch[suffix]");
     }
   
     if (major_Vin != major_Vref) return major_Vin > major_Vref;

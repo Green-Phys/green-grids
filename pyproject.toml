@@ -81,7 +81,7 @@ tests = ["coverage>=5.0.3", "pytest", "pytest-benchmark[histogram]>=3.2.1"]
 [tool.cibuildwheel]
 skip = ["*-musllinux*"]
 test-requires = "pytest"
-test-command = "pytest {project}/python/tests"
+test-command = "pytest -m 'not slow' {project}/python/tests"
 
 # -------------------------
 # Linux-specific settings
@@ -95,3 +95,11 @@ manylinux-x86_64-image = "manylinux_2_28"
 [tool.coverage.run]
 branch = true
 source = ["python/green_grids"]
+
+# -------------------------
+# Pytest configuration
+# -------------------------
+[tool.pytest.ini_options]
+markers = [
+    "slow: mark a test that takes a long time to run.",
+]
