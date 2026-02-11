@@ -160,8 +160,7 @@ void check_transformer(green::grids::transformer_t& tr) {
     REQUIRE(leakage < 1e-10);
   }
   SECTION("Check Version Info") {
-    std::string v;
-    tr.get_version(v);
+    std::string v = tr.get_version();
     std::string v2 = "0.2.0";  // Older version
     REQUIRE(green::grids::CheckVersion(v));
     REQUIRE_FALSE(green::grids::CheckVersion(v2));

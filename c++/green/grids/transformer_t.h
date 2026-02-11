@@ -70,7 +70,7 @@ namespace green::grids {
      * 
      * @param v - std::string
      */
-    void get_version(std::string& v) const { v = _version; }
+    const std::string& get_version() const { return _version; }
 
     /**
      * @param n   - [INPUT] Matsubara frequency number, omega(n) = iw_n
