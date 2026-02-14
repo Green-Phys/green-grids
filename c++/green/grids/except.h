@@ -16,6 +16,11 @@ namespace green::grids {
   public:
     explicit grids_file_not_found_error(const std::string& string) : runtime_error(string) {}
   };
+
+  class outdated_grids_file_error : public std::runtime_error {
+  public:
+    explicit outdated_grids_file_error(const std::string& string) : runtime_error(string) {}
+  };
 }  // namespace green::grids
 
 #endif  // GRIDS_EXCEPT_H

@@ -3,8 +3,8 @@ import unittest
 # import numpy as np
 # from numpy.testing import assert_allclose
 
-from sparse_grid import get_generator, get_fermi_bose_pair
-from sparse_grid import get_transformer, transform_data, transform_paired_data
+from green_grids import get_generator, get_fermi_bose_pair
+from green_grids import get_transformer, transform_data, transform_paired_data
 
 
 class ModuleFunctionsTest(unittest.TestCase):

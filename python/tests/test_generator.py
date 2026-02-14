@@ -1,6 +1,6 @@
 import numpy as np
 import unittest
-from sparse_grid.repn.generator import Generator
+from green_grids.repn.generator import Generator
 from unittest.mock import Mock
 
 
