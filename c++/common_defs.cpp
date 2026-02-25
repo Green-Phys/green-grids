@@ -43,7 +43,7 @@ namespace green::grids {
       if (compare_version_strings(grid_file_version, GRIDS_MIN_VERSION) > 0) {
         throw outdated_results_file_error("The results file was created using un-versioned grid file (equiv. to " + GRIDS_MIN_VERSION +
                                           ") and the current green-grids version (" + grid_file_version + ") is newer.\n" + 
-                                          "Please use old grid files from: https://github.com/Green-Phys/green-grids/releases/tag/v0.2.4.");
+                                          "Please use old grid files from: https://github.com/Green-Phys/green-grids/releases/tag/v" GRIDS_MIN_VERSION ".");
       }
     }
   }
