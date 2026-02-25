@@ -51,7 +51,7 @@ namespace green::grids {
     if (tnl_file.has_attribute("__grids_version__")) {
       std::string v_str = tnl_file.get_attribute<std::string>("__grids_version__");
       set_version(v_str);
-      if (!CheckVersion(v_str)) {
+      if (compare_version_strings(v_str, GRIDS_MIN_VERSION) < 0) {
         throw outdated_grids_file_error("The grids file version " + v_str +
                                         " is outdated. Minimum required version is " + GRIDS_MIN_VERSION + ".");
       }

@@ -162,8 +162,25 @@ void check_transformer(green::grids::transformer_t& tr) {
   SECTION("Check Version Info") {
     std::string v = tr.get_version();
     std::string v2 = "0.2.0";  // Older version
-    REQUIRE(green::grids::CheckVersion(v));
-    REQUIRE_FALSE(green::grids::CheckVersion(v2));
+    REQUIRE(green::grids::compare_version_strings(v, green::grids::GRIDS_MIN_VERSION) >= 0);
+    REQUIRE(green::grids::compare_version_strings(v2, green::grids::GRIDS_MIN_VERSION) < 0);
+  }
+  SECTION("Check Version Consistency in HDF5 File") {
+    // 1. Starting with new file (does not exist).
+    //    Version check should pass because there's nothing to check / no inconsistency
+    std::string res_file = "grids_version_check_file.h5";
+    REQUIRE_NOTHROW(green::grids::check_grids_version_in_hdf5(res_file, "0.2.4"));
+
+    // 2. Open the file and add __grids_version__ attribute
+    green::h5pp::archive ar_res_1(res_file, "w");
+    ar_res_1.set_attribute<std::string>("__grids_version__", "0.2.4");
+    ar_res_1.close();
+    REQUIRE_NOTHROW(green::grids::check_grids_version_in_hdf5(res_file, green::grids::GRIDS_MIN_VERSION));
+    REQUIRE_THROWS_AS(green::grids::check_grids_version_in_hdf5(res_file, "0.2.3"),
+                      green::grids::outdated_grids_file_error);
+    REQUIRE_THROWS_AS(green::grids::check_grids_version_in_hdf5(res_file, "0.2.5"),
+                      green::grids::outdated_results_file_error);
+    std::filesystem::remove(res_file);
   }
 }
 
