@@ -34,7 +34,7 @@ namespace green::grids {
                                           "). Please update green-grids to version " + grids_version_in_results);
       } else if (compare_version_strings(grid_file_version, grids_version_in_results) > 0) {
         throw outdated_results_file_error("The green-grids version used to create the results file (" + grids_version_in_results +
-                                          ") is older than the current grid-grids version (" + grid_file_version +
+                                          ") is older than the current green-grids version (" + grid_file_version +
                                           "). Please download the appropriate version from: " +
                                           "https://github.com/Green-Phys/green-grids/releases/ or https://github.com/Green-Phys/green-grids/tags");
       }
