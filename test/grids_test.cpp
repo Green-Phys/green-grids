@@ -8,14 +8,23 @@
 #include <catch2/catch_approx.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <filesystem>
+#include <chrono>
+#include <random>
 
 #include "tensor_test.h"
 
 using namespace std::string_literals;
 
 std::filesystem::path make_temp_h5_path() {
-  static int counter = 0;
-  return std::filesystem::temp_directory_path() / ("grids_version_check_" + std::to_string(counter++) + ".h5");
+  const auto temp_dir = std::filesystem::temp_directory_path();
+  // Use high-resolution timestamp and randomness to avoid filename collisions
+  const auto now = std::chrono::high_resolution_clock::now().time_since_epoch().count();
+  std::random_device rd;
+  std::mt19937_64 gen(rd());
+  std::uniform_int_distribution<std::uint64_t> dist;
+  const auto rand_val = dist(gen);
+  const auto filename = "grids_version_check_" + std::to_string(now) + "_" + std::to_string(rand_val) + ".h5";
+  return temp_dir / filename;
 }
 
 struct file_cleanup_guard {
