@@ -38,13 +38,13 @@ namespace green::grids {
                                           "). Please download the appropriate version from: " +
                                           "https://github.com/Green-Phys/green-grids/releases/ or https://github.com/Green-Phys/green-grids/tags");
       }
-    } else if (compare_version_strings(grid_file_version, GRIDS_MIN_VERSION) > 0) {
-      ar.close(); // safely close before throwing
-      throw outdated_results_file_error("The results file was created using un-versioned grid file (equiv. to " + GRIDS_MIN_VERSION +
-                                        ") and the current green-grids version (" + grid_file_version + ") is newer.\n" + 
-                                        "Please use old grid files from: https://github.com/Green-Phys/green-grids/releases/tag/v0.2.4.");
     } else {
-      ar.close();
+      ar.close(); // safely close comparing version strings
+      if (compare_version_strings(grid_file_version, GRIDS_MIN_VERSION) > 0) {
+        throw outdated_results_file_error("The results file was created using un-versioned grid file (equiv. to " + GRIDS_MIN_VERSION +
+                                          ") and the current green-grids version (" + grid_file_version + ") is newer.\n" + 
+                                          "Please use old grid files from: https://github.com/Green-Phys/green-grids/releases/tag/v0.2.4.");
+      }
     }
   }
 }  // namespace green::grids
