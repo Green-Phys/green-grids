@@ -173,11 +173,15 @@ void check_transformer(green::grids::transformer_t& tr) {
     double leakage = tr.check_chebyshev(X1t, 1);
     REQUIRE(leakage < 1e-10);
   }
-  SECTION("Check Version Info") {
+  SECTION("Check Comparison of Version Strings") {
     std::string v = tr.get_version();
     std::string v2 = "0.2.0";  // Older version
     REQUIRE(green::grids::compare_version_strings(v, green::grids::GRIDS_MIN_VERSION) >= 0);
     REQUIRE(green::grids::compare_version_strings(v2, green::grids::GRIDS_MIN_VERSION) < 0);
+    REQUIRE(green::grids::compare_version_strings(green::grids::GRIDS_MIN_VERSION, v2) > 0);
+    REQUIRE_THROWS_AS(green::grids::compare_version_strings("0.1", "0.2.4"), green::grids::outdated_grids_file_error);
+    REQUIRE_THROWS_AS(green::grids::compare_version_strings("0.2.4", "0.1"), green::grids::outdated_grids_file_error);
+    REQUIRE_NOTHROW(green::grids::compare_version_strings("0.2.4abce", "0.2.4.xyz"));
   }
   SECTION("Check Version Consistency in HDF5 File") {
     // 1. Starting with new file (does not exist).
@@ -186,12 +190,22 @@ void check_transformer(green::grids::transformer_t& tr) {
     file_cleanup_guard cleanup(res_file_path);
     std::string res_file = res_file_path.string();
     REQUIRE_NOTHROW(green::grids::check_grids_version_in_hdf5(res_file, "0.2.4"));
+    
+    // 2. Open file add some data but don't add __grids_version__
+    //    This mimics the case when results file was created using old grids
+    //    Checking consistency of grids versions should pass if old grids are used,
+    //    otherwise throw an error for new grids
+    green::h5pp::archive ar_res_0(res_file, "w");
+    ar_res_0["One"] << 1.0;
+    ar_res_0.close();
+    REQUIRE_NOTHROW(green::grids::check_grids_version_in_hdf5(res_file, green::grids::GRIDS_MIN_VERSION));
+    REQUIRE_THROWS_AS(green::grids::check_grids_version_in_hdf5(res_file, "0.3.0"), green::grids::outdated_results_file_error);
 
-    // 2. Open the file and set the __grids_version__ attribute to 0.2.4
+    // 3. Open the file and set the __grids_version__ attribute to 0.2.4
     //    Then comparing with 0.2.4 should pass;
     //    comparing with older version should throw outdated_grids_file_error;
     //    comparing with newer version should throw outdated_results_file_error
-    green::h5pp::archive ar_res_1(res_file, "w");
+    green::h5pp::archive ar_res_1(res_file, "a");
     ar_res_1.set_attribute<std::string>("__grids_version__", "0.2.4");
     ar_res_1.close();
     REQUIRE_NOTHROW(green::grids::check_grids_version_in_hdf5(res_file, green::grids::GRIDS_MIN_VERSION));
