@@ -8,7 +8,6 @@
 #include <green/ndarray/ndarray.h>
 #include <green/ndarray/ndarray_math.h>
 #include <green/params/params.h>
-#include <green/h5pp/archive.h>
 #include "except.h"
 
 #include <Eigen/Dense>
@@ -66,10 +65,10 @@ namespace green::grids {
     int parsed_2 = std::sscanf(v2.c_str(), "%d.%d.%d%30s", &major_V2, &minor_V2, &patch_V2, suffix_V2);
 
     if (parsed_1 < 3) {
-      throw std::runtime_error("First version string (v1) failed to parse: '" + v1 + "'. Expected format: major.minor.patch[suffix]");
+      throw outdated_grids_file_error("First version string (v1) failed to parse: '" + v1 + "'. Expected format: major.minor.patch[suffix]");
     }
     if (parsed_2 < 3) {
-      throw std::runtime_error("Second version string (v2) failed to parse: '" + v2 + "'. Expected format: major.minor.patch[suffix]");
+      throw outdated_grids_file_error("Second version string (v2) failed to parse: '" + v2 + "'. Expected format: major.minor.patch[suffix]");
     }
 
     if (major_V1 != major_V2) {

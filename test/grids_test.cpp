@@ -7,12 +7,25 @@
 
 #include <catch2/catch_approx.hpp>
 #include <catch2/catch_test_macros.hpp>
-#include <chrono>
-#include <thread>
+#include <filesystem>
 
 #include "tensor_test.h"
 
 using namespace std::string_literals;
+
+std::filesystem::path make_temp_h5_path() {
+  return std::filesystem::temp_directory_path() / std::filesystem::unique_path("grids_version_check_%%%%-%%%%-%%%%.h5");
+}
+
+struct file_cleanup_guard {
+  explicit file_cleanup_guard(std::filesystem::path file_path) : path(std::move(file_path)) {}
+  ~file_cleanup_guard() {
+    std::error_code ec;
+    std::filesystem::remove(path, ec);
+  }
+
+  std::filesystem::path path;
+};
 
 inline std::pair<int, char**> get_argc_argv(std::string& str) {
   std::string        key;
@@ -168,10 +181,15 @@ void check_transformer(green::grids::transformer_t& tr) {
   SECTION("Check Version Consistency in HDF5 File") {
     // 1. Starting with new file (does not exist).
     //    Version check should pass because there's nothing to check / no inconsistency
-    std::string res_file = "grids_version_check_file.h5";
+    std::filesystem::path res_file_path = make_temp_h5_path();
+    file_cleanup_guard cleanup(res_file_path);
+    std::string res_file = res_file_path.string();
     REQUIRE_NOTHROW(green::grids::check_grids_version_in_hdf5(res_file, "0.2.4"));
 
-    // 2. Open the file and add __grids_version__ attribute
+    // 2. Open the file and set the __grids_version__ attribute to 0.2.4
+    //    Then comparing with 0.2.4 should pass;
+    //    comparing with older version should throw outdated_grids_file_error;
+    //    comparing with newer version should throw outdated_results_file_error
     green::h5pp::archive ar_res_1(res_file, "w");
     ar_res_1.set_attribute<std::string>("__grids_version__", "0.2.4");
     ar_res_1.close();
@@ -180,7 +198,6 @@ void check_transformer(green::grids::transformer_t& tr) {
                       green::grids::outdated_grids_file_error);
     REQUIRE_THROWS_AS(green::grids::check_grids_version_in_hdf5(res_file, "0.2.5"),
                       green::grids::outdated_results_file_error);
-    std::filesystem::remove(res_file);
   }
 }
 
