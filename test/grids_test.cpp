@@ -14,7 +14,8 @@
 using namespace std::string_literals;
 
 std::filesystem::path make_temp_h5_path() {
-  return std::filesystem::temp_directory_path() / std::filesystem::unique_path("grids_version_check_%%%%-%%%%-%%%%.h5");
+  static int counter = 0;
+  return std::filesystem::temp_directory_path() / ("grids_version_check_" + std::to_string(counter++) + ".h5");
 }
 
 struct file_cleanup_guard {
