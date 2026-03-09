@@ -2,7 +2,7 @@
 # Updates version.py, updates HDF5 file version attributes, commits changes,
 # creates a matching tag, and deploys the package to PyPI.
 
-# NOTE: A direct / manual push for release is not allowed. Releas can only be triggered
+# NOTE: A direct / manual push for release is not allowed. Release can only be triggered
 # via repository_dispatch from green-mbpt. This is to ensure that the version update and
 # deployment steps are always executed when a new tag is created.
 
