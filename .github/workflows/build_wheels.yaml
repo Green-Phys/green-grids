@@ -11,6 +11,16 @@ name: Update Version and Deploy
 on:
   repository_dispatch:
     types: [version-update]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to create (e.g. v0.3.3-test)'
+        required: true
+      dry_run:
+        description: 'Dry run - skip commit and tag creation'
+        required: true
+        default: 'true'
+        type: boolean
 
 # Canceling in-progress runs is disabled to ensure that the deployment step is not accidentally canceled if multiple tags are created in quick succession. The concurrency group is still defined to prevent multiple runs for the same tag, but it won't cancel an already running deployment if a new tag is pushed while it's still running.
 concurrency:
@@ -39,7 +49,7 @@ jobs:
 
       - name: Update version.py
         env:
-          TAG_NAME: ${{ github.event.client_payload.tag }}
+          TAG_NAME: ${{ github.event.client_payload.tag || github.event.inputs.tag }}
         run: |
           VERSION=${TAG_NAME#v}
           sed -i "s/__version__ = '.*'/__version__ = '$VERSION'/" \
@@ -47,7 +57,7 @@ jobs:
 
       - name: Update data.h5 version attributes
         env:
-          TAG_NAME: ${{ github.event.client_payload.tag }}
+          TAG_NAME: ${{ github.event.client_payload.tag || github.event.inputs.tag }}
         run: |
           VERSION=${TAG_NAME#v}
           python3 - <<EOF
@@ -66,8 +76,9 @@ jobs:
 
       - name: Commit and push
         env:
-          TAG_NAME: ${{ github.event.client_payload.tag }}
+          TAG_NAME: ${{ github.event.client_payload.tag || github.event.inputs.tag }}
           DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+          DRY_RUN: ${{ github.event.inputs.dry_run }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -76,15 +87,23 @@ jobs:
             echo "No changes to commit, version already up to date"
           else
             git commit -m "Release $TAG_NAME"
-            git push origin "HEAD:${DEFAULT_BRANCH}"
+            if [ "$DRY_RUN" = "true" ]; then
+              echo "Dry run: skipping push to ${DEFAULT_BRANCH}"
+              git diff HEAD~1
+            else
+              git push origin "HEAD:${DEFAULT_BRANCH}"
+            fi
           fi
 
       - name: Create and push tag
         env:
-          TAG_NAME: ${{ github.event.client_payload.tag }}
+          TAG_NAME: ${{ github.event.client_payload.tag || github.event.inputs.tag }}
+          DRY_RUN: ${{ github.event.inputs.dry_run }}
         run: |
           if git ls-remote --tags origin | grep -F -q "refs/tags/$TAG_NAME"; then
             echo "Tag $TAG_NAME already exists on remote, skipping"
+          elif [ "$DRY_RUN" = "true" ]; then
+            echo "Dry run: skipping tag creation for $TAG_NAME"
           else
             git tag "$TAG_NAME"
             git push origin "$TAG_NAME"
