@@ -130,7 +130,7 @@ jobs:
             git push origin "$TAG_NAME"
           fi
 
-  build_sdist:
+  build_distributions:
     needs: [update-and-deploy]
     if: github.event_name == 'repository_dispatch'
     name: Build source distribution
