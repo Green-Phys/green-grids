@@ -38,15 +38,17 @@ jobs:
         run: pip install h5py
 
       - name: Update version.py
+        env:
+          TAG_NAME: ${{ github.event.client_payload.tag }}
         run: |
-          TAG_NAME="${{ github.event.client_payload.tag }}"
           VERSION=${TAG_NAME#v}
-          sed -i "s/__version__ = \".*\"/__version__ = \"$VERSION\"/" \
+          sed -i "s/__version__ = '.*'/__version__ = '$VERSION'/" \
             python/green_grids/version.py
 
       - name: Update data.h5 version attributes
+        env:
+          TAG_NAME: ${{ github.event.client_payload.tag }}
         run: |
-          TAG_NAME="${{ github.event.client_payload.tag }}"
           VERSION=${TAG_NAME#v}
           python3 - <<EOF
           import h5py
@@ -63,9 +65,10 @@ jobs:
           EOF
 
       - name: Commit and push
+        env:
+          TAG_NAME: ${{ github.event.client_payload.tag }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
         run: |
-          TAG_NAME="${{ github.event.client_payload.tag }}"
-          DEFAULT_BRANCH="${{ github.event.repository.default_branch }}"
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add python/green_grids/version.py data/ir/*.h5 data/cheb/*.h5
@@ -77,13 +80,14 @@ jobs:
           fi
 
       - name: Create and push tag
+        env:
+          TAG_NAME: ${{ github.event.client_payload.tag }}
         run: |
-          TAG_NAME="${{ github.event.client_payload.tag }}"
           if git ls-remote --tags origin | grep -F -q "refs/tags/$TAG_NAME"; then
             echo "Tag $TAG_NAME already exists on remote, skipping"
           else
-            git tag $TAG_NAME
-            git push origin $TAG_NAME
+            git tag "$TAG_NAME"
+            git push origin "$TAG_NAME"
           fi
 
   build_sdist:
@@ -97,6 +101,7 @@ jobs:
         with:
           app-id: ${{ secrets.GREEN_TAG_APP_ID }}
           private-key: ${{ secrets.GREEN_TAG_APP_PRIVATE_KEY }}
+          owner: Green-Phys
 
       - uses: actions/checkout@v4
         with:
