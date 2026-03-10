@@ -65,6 +65,7 @@ jobs:
       - name: Commit and push
         run: |
           TAG_NAME="${{ github.event.client_payload.tag }}"
+          DEFAULT_BRANCH="${{ github.event.repository.default_branch }}"
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add python/green_grids/version.py data/ir/*.h5 data/cheb/*.h5
@@ -72,13 +73,13 @@ jobs:
             echo "No changes to commit, version already up to date"
           else
             git commit -m "Release $TAG_NAME"
-            git push origin main
+            git push origin "HEAD:${DEFAULT_BRANCH}"
           fi
 
       - name: Create and push tag
         run: |
           TAG_NAME="${{ github.event.client_payload.tag }}"
-          if git ls-remote --tags origin | grep -q "refs/tags/${TAG_NAME}$"; then
+          if git ls-remote --tags origin | grep -F -q "refs/tags/$TAG_NAME"; then
             echo "Tag $TAG_NAME already exists on remote, skipping"
           else
             git tag $TAG_NAME
