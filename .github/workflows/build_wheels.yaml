@@ -14,17 +14,16 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: 'Tag to create (e.g. v0.3.3-test)'
+        description: 'Tag to create (e.g. v0.3.3-test). Always a dry run — no commits, tags, or PyPI uploads.'
         required: true
-      dry_run:
-        description: 'Dry run - skip commit and tag creation'
-        required: true
-        default: 'true'
-        type: boolean
 
-# Canceling in-progress runs is disabled to ensure that the deployment step is not accidentally canceled if multiple tags are created in quick succession. The concurrency group is still defined to prevent multiple runs for the same tag, but it won't cancel an already running deployment if a new tag is pushed while it's still running.
+# Canceling in-progress runs is disabled to ensure that the deployment step is not
+# accidentally canceled if multiple tags are created in quick succession.
+# The concurrency group is still defined to prevent multiple runs for the same tag,
+# but it won't cancel an already running deployment if a new tag is pushed while
+# it's still running.
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.client_payload.tag }}
+  group: ${{ github.workflow }}-${{ github.event.client_payload.tag || github.event.inputs.tag }}
   cancel-in-progress: false  # safer for PyPI deployments
 
 jobs:
@@ -78,7 +77,7 @@ jobs:
         env:
           TAG_NAME: ${{ github.event.client_payload.tag || github.event.inputs.tag }}
           DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
-          DRY_RUN: ${{ github.event.inputs.dry_run }}
+          DRY_RUN: ${{ github.event_name == 'workflow_dispatch' }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -98,7 +97,7 @@ jobs:
       - name: Create and push tag
         env:
           TAG_NAME: ${{ github.event.client_payload.tag || github.event.inputs.tag }}
-          DRY_RUN: ${{ github.event.inputs.dry_run }}
+          DRY_RUN: ${{ github.event_name == 'workflow_dispatch' }}
         run: |
           if git ls-remote --tags origin | grep -F -q "refs/tags/$TAG_NAME"; then
             echo "Tag $TAG_NAME already exists on remote, skipping"
@@ -111,6 +110,7 @@ jobs:
 
   build_sdist:
     needs: [update-and-deploy]
+    if: github.event_name == 'repository_dispatch'
     name: Build source distribution
     runs-on: ubuntu-latest
     steps:
@@ -124,7 +124,7 @@ jobs:
 
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.client_payload.tag }}
+          ref: ${{ github.event.client_payload.tag || github.event.inputs.tag }}
           fetch-depth: 0
           token: ${{ steps.generate-token.outputs.token }}
 
