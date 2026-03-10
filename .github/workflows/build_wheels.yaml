@@ -51,14 +51,19 @@ jobs:
             echo "Error: TAG_NAME is empty"
             exit 1
           fi
-          if ! echo "$TAG_NAME" | grep -qE '^v[0-9]+\.[0-9]+\.[0-9]+$'; then
-            echo "Error: TAG_NAME '$TAG_NAME' does not match expected format vX.Y.Z"
+          if ! echo "$TAG_NAME" | grep -qE '^v[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9._-]+)?$'; then
+            echo "Error: TAG_NAME '$TAG_NAME' does not match expected format vX.Y.Z or vX.Y.Z-suffix"
             exit 1
           fi
           echo "TAG_NAME '$TAG_NAME' is valid"
 
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
       - name: Install h5py
-        run: pip install h5py
+        run: python3 -m pip install h5py
 
       - name: Update version.py
         env:
@@ -169,12 +174,12 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: sdist
+          name: distributions
           path: dist/*
           if-no-files-found: error
 
   upload_pypi:
-    needs: [build_sdist]
+    needs: [build_distributions]
     runs-on: ubuntu-latest
     environment: release
     permissions:
@@ -184,7 +189,7 @@ jobs:
     steps:
       - uses: actions/download-artifact@v4
         with:
-          pattern: sdist
+          pattern: distributions
           path: dist
           merge-multiple: true
 
