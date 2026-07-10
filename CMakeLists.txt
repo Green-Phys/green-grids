@@ -8,7 +8,7 @@ if (${CMAKE_CURRENT_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_BINARY_DIR})
 endif ()
 
 ################ GREEN RELEASE VERSION #####################
-set(GREEN_RELEASE origin/main)
+set(GREEN_RELEASE "origin/main" CACHE STRING "Release version for Green dependencies")
 
 set(CMAKE_CXX_STANDARD 17)
 
