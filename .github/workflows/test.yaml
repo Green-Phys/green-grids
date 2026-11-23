@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
 
     - name: Build
       run: |        
@@ -38,8 +38,40 @@ jobs:
     - name: Run coverage
       run: |
         cd build;
-        lcov --ignore-errors source,source --capture --directory . --output-file coverage.info;
+        lcov --ignore-errors source,source,inconsistent,inconsistent --capture --directory . --output-file coverage.info;
     - name: Upload coverage reports to Codecov
-      uses: codecov/codecov-action@v3
+      uses: codecov/codecov-action@v7
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+  build-min-cmake:
+    # Build and test with the oldest CMake declared in cmake_minimum_required.
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v7
+
+    - uses: actions/setup-python@v7
+      with:
+        python-version: "3.12"
+
+    - name: Install CMake 3.18
+      run: |
+        python -m pip install "cmake==3.18.4.post1"
+        cmake --version
+
+    - name: Build
+      run: |
+        sudo apt-get update
+        sudo apt-get install openmpi-bin openmpi-common libopenmpi-dev
+        sudo apt-get install libhdf5-serial-dev
+        sudo apt-get install libeigen3-dev
+        sudo apt-get install libopenblas-dev
+
+        cmake -S . -B build
+        cmake --build build -j4
+
+    - name: Test
+      run: |
+        cd build;
+        ctest -j1;
