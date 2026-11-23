@@ -1,6 +1,10 @@
 project(grids-lib CXX)
 
-cmake_policy(SET CMP0144 NEW)
+# CMP0144 (CMake >= 3.27): let find_package also honour upper-case <PACKAGENAME>_ROOT,
+# e.g. EIGEN3_ROOT as exported by many HPC environment modules.
+if (POLICY CMP0144)
+    cmake_policy(SET CMP0144 NEW)
+endif ()
 
 find_package(Eigen3 REQUIRED)
 find_package(BLAS)
